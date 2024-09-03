@@ -1,6 +1,7 @@
 package com.example.mknewsscrappingbot.service;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -26,7 +27,7 @@ public class SeleniumService {
         FirefoxOptions options = new FirefoxOptions();
 
         options.addArguments("--start-maximized"); //최대크기로
-//        options.addArguments("--headless"); // Browser를 띄우지 않음
+        options.addArguments("--headless"); // Browser를 띄우지 않음
         options.addArguments("--disable-gpu"); // GPU를 사용하지 않음, Linux에서 headless를 사용하는 경우 필요함.
         options.addArguments("--no-sandbox"); // Sandbox 프로세스를 사용하지 않음, Linux에서 headless를 사용하는 경우 필요함.
         options.addArguments("--disable-popup-blocking"); //팝업 무시
@@ -37,7 +38,7 @@ public class SeleniumService {
 
         try {
             driver.get(requestUrl);
-            Thread.sleep(2000); // 페이지 로딩 시간 동안 기다림
+            Thread.sleep(1000); // 페이지 로딩 시간 동안 기다림
 
             // Top 10 뉴스 항목 선택
             List<WebElement> newsNodes = driver.findElements(By.cssSelector("li.news_node.top_news_node"));
@@ -50,24 +51,32 @@ public class SeleniumService {
 
                 // 뉴스 페이지로 이동
                 driver.get(url);
-                WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-                wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("h2.news_ttl")));
+                // 페이지 전체가 로드될 때까지 대기
+                new WebDriverWait(driver, Duration.ofSeconds(20)).until(
+                        webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState").equals("complete")
+                );
 
                 // 제목 추출
-                WebElement titleElement = driver.findElement(By.cssSelector("h2.news_ttl"));
-                String title = titleElement.getText();
-                System.out.println("Title: " + title);
+                List<WebElement> titleElements = driver.findElements(By.xpath("//*[@id='container']/section/div[2]/section/div/div/div/h2"));
+                String title = titleElements.get(0).getText();
+                System.out.println("Title: " + title.toString());
 
                 // 내용 추출
-                WebElement contentWrap = driver.findElement(By.cssSelector("div.news_cnt_detail_wrap"));
-                List<WebElement> paragraphs = contentWrap.findElements(By.tagName("p"));
+                WebElement contentWrap = driver.findElement(By.xpath("//*[@id='container']/section/div[3]/section/div[1]/div[1]/div[1]"));
                 StringBuilder content = new StringBuilder();
-                for (WebElement paragraph : paragraphs) {
-                    content.append(paragraph.getText()).append("\n");
+
+                List<WebElement> paragraphs = contentWrap.findElements(By.tagName("p"));
+
+                if (!paragraphs.isEmpty()) {
+                    for (WebElement paragraph : paragraphs) {
+                        content.append(paragraph.getText()).append("\n");
+                    }
+                } else {
+                    content.append(contentWrap.getText()).append("\n");
                 }
-                System.out.println("Content: " + content.toString());
+                System.out.println("Content: " + content);
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             driver.quit();
