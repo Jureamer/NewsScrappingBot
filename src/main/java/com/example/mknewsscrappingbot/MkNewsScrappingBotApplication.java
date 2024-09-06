@@ -13,7 +13,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class MkNewsScrappingBotApplication {
     public static void main(String[] args) {
+
         SeleniumService seleniumService = new SeleniumService();
-        seleniumService.testSelenium();
+        seleniumService.crawling();
     }
 }
