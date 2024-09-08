@@ -1,6 +1,9 @@
 package com.example.mknewsscrappingbot;
 
+import com.example.mknewsscrappingbot.config.DiscordBot;
+import com.example.mknewsscrappingbot.config.DiscordBotToken;
 import com.example.mknewsscrappingbot.service.SeleniumService;
+import net.dv8tion.jda.api.JDA;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -9,12 +12,23 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
 
 @SpringBootApplication
 public class MkNewsScrappingBotApplication {
-    public static void main(String[] args) {
+    private static DiscordBotToken discordBotToken;
+    private static SeleniumService seleniumService;
+    @Autowired
+    public MkNewsScrappingBotApplication(DiscordBotToken discordBotToken, SeleniumService seleniumService) {
+        this.discordBotToken = discordBotToken;
+        this.seleniumService = seleniumService;
+    }
 
-        SeleniumService seleniumService = new SeleniumService();
-        seleniumService.crawling();
+    public static void main(String[] args) {
+        ApplicationContext context = SpringApplication.run(MkNewsScrappingBotApplication.class, args);
+        discordBotToken = context.getBean(DiscordBotToken.class);
+        JDA jda = new DiscordBot(discordBotToken, seleniumService).getDiscordBot();
+
+        System.out.println("Hello, World!" + jda);
     }
 }
