@@ -1,5 +1,6 @@
 package com.example.mknewsscrappingbot.service;
 
+import com.example.mknewsscrappingbot.data.KeywordMapping;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -31,7 +32,7 @@ public class SeleniumService {
         FirefoxOptions options = new FirefoxOptions();
 
         options.addArguments("--start-maximized"); //최대크기로
-//        options.addArguments("--headless"); // Browser를 띄우지 않음
+        options.addArguments("--headless"); // Browser를 띄우지 않음
         options.addArguments("--disable-gpu"); // GPU를 사용하지 않음, Linux에서 headless를 사용하는 경우 필요함.
         options.addArguments("--no-sandbox"); // Sandbox 프로세스를 사용하지 않음, Linux에서 headless를 사용하는 경우 필요함.
         options.addArguments("--disable-popup-blocking"); //팝업 무시
@@ -39,14 +40,11 @@ public class SeleniumService {
         driver = new FirefoxDriver(options);
 
         String requestUrl = "https://www.mk.co.kr/";
-        HashMap<String, String> keywordsMap = new HashMap<>(){}
-//        String[] keywords = {"economy", , "society", "world", "realestate", "stock", "it", "politics", "culture", "sports"};
-        String[] keywords = {"economy"};
         String returnMessage = "";
 
         try {
-            for (String keyword : keywords) {
-                driver.get(requestUrl + "news/" + keyword);
+            String categoryEn = KeywordMapping.getKeywordForCategory(category);
+                driver.get(requestUrl + "news/" + categoryEn);
 
                 Thread.sleep(1000); // 페이지 로딩 시간 동안 기다림
 
@@ -70,7 +68,6 @@ public class SeleniumService {
                     List<WebElement> titleElements = driver.findElements(By.xpath("//*[@id='container']/section/div[2]/section/div/div/div/h2"));
                     String title = titleElements.get(0).getText();
 
-//                    System.out.println("title : " + title);
                     // 내용 추출
                     WebElement contentWrap = driver.findElement(By.xpath("//*[@id='container']/section/div[3]/section/div[1]/div[1]/div[1]"));
                     StringBuilder content = new StringBuilder();
@@ -80,15 +77,15 @@ public class SeleniumService {
                     if (!paragraphs.isEmpty()) {
                         for (WebElement paragraph : paragraphs) {
                             content.append(paragraph.getText()).append("\n");
+                            break;
                         }
                     } else {
                         content.append(contentWrap.getText()).append("\n");
                     }
 
 //                    System.out.println("content : " + content);
-                    returnMessage += title + "\n" + content + "\n";
+                    returnMessage += "제목 : " + title + "\n" + "내용 :" + content + "\n";
                 }
-            }
             return returnMessage;
         } catch (Exception e) {
             e.printStackTrace();
