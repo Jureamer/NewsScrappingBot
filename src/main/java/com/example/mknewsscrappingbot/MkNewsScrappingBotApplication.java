@@ -13,11 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class MkNewsScrappingBotApplication {
-    private static DiscordBotToken discordBotToken;
-    private static SeleniumService seleniumService;
+    private DiscordBotToken discordBotToken;
+    private SeleniumService seleniumService;
+
     @Autowired
     public MkNewsScrappingBotApplication(DiscordBotToken discordBotToken, SeleniumService seleniumService) {
         this.discordBotToken = discordBotToken;
@@ -26,9 +28,14 @@ public class MkNewsScrappingBotApplication {
 
     public static void main(String[] args) {
         ApplicationContext context = SpringApplication.run(MkNewsScrappingBotApplication.class, args);
-        discordBotToken = context.getBean(DiscordBotToken.class);
-        JDA jda = new DiscordBot(discordBotToken, seleniumService).getDiscordBot();
+        MkNewsScrappingBotApplication application = context.getBean(MkNewsScrappingBotApplication.class);
+        JDA jda = application.initializeBot();
 
         System.out.println("Hello, World!" + jda);
+    }
+
+    @Bean
+    public JDA initializeBot() {
+        return new DiscordBot(discordBotToken, seleniumService).getDiscordBot();
     }
 }

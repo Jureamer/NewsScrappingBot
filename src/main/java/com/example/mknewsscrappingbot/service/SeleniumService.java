@@ -10,16 +10,20 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.stereotype.Service;
 
 import java.time.Duration;
+import java.util.HashMap;
 import java.util.List;
 
+@Service
 public class SeleniumService {
     private WebDriver driver;
     public static String WEB_DRIVER_ID = "webdriver.gecko.driver";
-    public static String WEB_DRIVER_PATH = "/Users/han/Downloads/geckodriver";
+//    public static String WEB_DRIVER_PATH = "/Users/han/Downloads/geckodriver";
+    public static String WEB_DRIVER_PATH = "/usr/bin/geckodriver";
 
-    public String crawling() {
+    public String crawling(String category) {
 
         System.setProperty(WEB_DRIVER_ID, WEB_DRIVER_PATH);
 
@@ -27,7 +31,7 @@ public class SeleniumService {
         FirefoxOptions options = new FirefoxOptions();
 
         options.addArguments("--start-maximized"); //최대크기로
-        options.addArguments("--headless"); // Browser를 띄우지 않음
+//        options.addArguments("--headless"); // Browser를 띄우지 않음
         options.addArguments("--disable-gpu"); // GPU를 사용하지 않음, Linux에서 headless를 사용하는 경우 필요함.
         options.addArguments("--no-sandbox"); // Sandbox 프로세스를 사용하지 않음, Linux에서 headless를 사용하는 경우 필요함.
         options.addArguments("--disable-popup-blocking"); //팝업 무시
@@ -35,8 +39,9 @@ public class SeleniumService {
         driver = new FirefoxDriver(options);
 
         String requestUrl = "https://www.mk.co.kr/";
-        String[] keywords = {"economy", "business", "society", "world", "realestate", "stock", "it", "politics", "culture", "sports"};
-
+        HashMap<String, String> keywordsMap = new HashMap<>(){}
+//        String[] keywords = {"economy", , "society", "world", "realestate", "stock", "it", "politics", "culture", "sports"};
+        String[] keywords = {"economy"};
         String returnMessage = "";
 
         try {
@@ -65,6 +70,7 @@ public class SeleniumService {
                     List<WebElement> titleElements = driver.findElements(By.xpath("//*[@id='container']/section/div[2]/section/div/div/div/h2"));
                     String title = titleElements.get(0).getText();
 
+//                    System.out.println("title : " + title);
                     // 내용 추출
                     WebElement contentWrap = driver.findElement(By.xpath("//*[@id='container']/section/div[3]/section/div[1]/div[1]/div[1]"));
                     StringBuilder content = new StringBuilder();
@@ -79,12 +85,14 @@ public class SeleniumService {
                         content.append(contentWrap.getText()).append("\n");
                     }
 
+//                    System.out.println("content : " + content);
                     returnMessage += title + "\n" + content + "\n";
                 }
             }
             return returnMessage;
         } catch (Exception e) {
             e.printStackTrace();
+            return "";
         } finally {
             driver.quit();
         }

@@ -23,14 +23,20 @@ public class DiscordListener extends ListenerAdapter {
 
         if (user.isBot()) {
             return;
-        } else if (message.getContentDisplay().equals("")) {
         }
 
-        String[] messageArray = message.getContentDisplay().split("/");
+        String content = message.getContentDisplay();
 
-        if (messageArray[0].equals("!뉴스")) {
-            seleniumService.crawling();
-            textChannel.sendMessage("뉴스를 가져옵니다.").queue();
+        if (content.startsWith("!뉴스")) {
+            String[] parts = content.split(" ");
+            if (parts.length > 1) {
+                String category = parts[1];
+                String newsSummary = seleniumService.crawling(category);
+                textChannel.sendMessage(newsSummary).queue();
+            } else {
+                textChannel.sendMessage("카테고리를 입력해 주세요. 예: !뉴스 경제").queue();
+            }
+
         }
     }
 
@@ -46,6 +52,6 @@ public class DiscordListener extends ListenerAdapter {
                 returnMessage = "알 수 없는 명령어입니다.";
                 break;
         }
-        return returnMessage;
+            return message;
     }
 }
