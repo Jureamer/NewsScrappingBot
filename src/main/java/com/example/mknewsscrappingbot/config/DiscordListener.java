@@ -38,7 +38,7 @@ public class DiscordListener extends ListenerAdapter {
                 String categoryEn = KeywordMapping.getKeywordForCategory(category);
 
                 if (categoryEn.isEmpty()) {
-                    textChannel.sendMessage("사용 가능한 카테고리: 경제, 비즈니스, IT, 사회, 세계, 부동산, 주식, 정치, 문화, 스포츠 ").queue();
+                    textChannel.sendMessage("사용 가능a한 카테고리: 경제, 비즈니스, IT, 사회, 세계, 부동산, 주식, 정치, 문화, 스포츠 ").queue();
                 }
                 textChannel.sendMessage(category + "뉴스를 가져옵니다.").queue();
                 ArrayList<String> newsSummary = seleniumService.crawling(category);
