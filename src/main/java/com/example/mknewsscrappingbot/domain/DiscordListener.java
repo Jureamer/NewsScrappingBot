@@ -29,6 +29,11 @@ public class DiscordListener extends ListenerAdapter {
             return;
         }
 
+        if (!textChannel.canTalk()) {
+            textChannel.sendMessage("기존 메세지를 처리 중입니다. 잠시만 기다려주세요").queue();
+            return;
+        }
+
         String content = message.getContentDisplay();
         String START_COMMAND = "!뉴스";
 
@@ -41,9 +46,9 @@ public class DiscordListener extends ListenerAdapter {
 
     private void crawlingSpecificNews(TextChannel textChannel, String content) {
 
-        String[] parts = content.split("");
+        String[] parts = content.split(" ");
 
-        if (parts.length != 1) {
+        if (parts.length != 2) {
             textChannel.sendMessage(MessageConstants.NEED_CATEGORY).queue();
             return;
         }
@@ -57,7 +62,7 @@ public class DiscordListener extends ListenerAdapter {
         }
 
         textChannel.sendMessage(MessageConstants.getNewsFetchingMessage(category)).queue();
-        ArrayList<String> newsSummary = seleniumService.crawling(category);
+        ArrayList<String> newsSummary = seleniumService.crawling(categoryEn);
 
         try {
             for (String summary : newsSummary) {
