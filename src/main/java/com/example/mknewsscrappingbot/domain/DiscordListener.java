@@ -1,6 +1,8 @@
 package com.example.mknewsscrappingbot.domain;
 
-import com.example.mknewsscrappingbot.data.KeywordMapping;
+import com.example.mknewsscrappingbot.data.CsKeywordMapping;
+import com.example.mknewsscrappingbot.data.IKeywordMapping;
+import com.example.mknewsscrappingbot.data.MkKeywordMapping;
 import com.example.mknewsscrappingbot.data.MessageConstants;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
@@ -14,6 +16,7 @@ import java.util.ArrayList;
 @Component
 public class DiscordListener extends ListenerAdapter {
     private final SeleniumService seleniumService;
+    private IKeywordMapping keywordMapping;
 
     public DiscordListener(SeleniumService seleniumService) {
         this.seleniumService = seleniumService;
@@ -35,17 +38,21 @@ public class DiscordListener extends ListenerAdapter {
         }
 
         String content = message.getContentDisplay();
-        String START_COMMAND = "!뉴스";
+        String MK_START_COMMAND = "/mk";
+        String CS_START_COMMAND = "/cs";
 
-        if (content.startsWith(START_COMMAND)) {
-            crawlingSpecificNews(textChannel, content);
-        } else {
+        if (content.startsWith(MK_START_COMMAND)) {
+            keywordMapping = new MkKeywordMapping();
+            crawlingSpecificNews(textChannel, content, "MK");
+        } else if(content.startsWith(CS_START_COMMAND)) {
+            keywordMapping = new CsKeywordMapping();
+            crawlingSpecificNews(textChannel, content, "CS");
+        }else {
             textChannel.sendMessage(MessageConstants.UNKNOWN_COMMAND).queue();
         }
     }
 
-    private void crawlingSpecificNews(TextChannel textChannel, String content) {
-
+    private void crawlingSpecificNews(TextChannel textChannel, String content, String media) {
         String[] parts = content.split(" ");
 
         if (parts.length != 2) {
@@ -54,15 +61,21 @@ public class DiscordListener extends ListenerAdapter {
         }
 
         String category = parts[1].toUpperCase();
-        String categoryEn = KeywordMapping.getKeywordForCategory(category);
+        String categoryEn = "";
+        if (media.equals("MK")) {
+            categoryEn = keywordMapping.getKeywordForCategory(category);
+        } else {
+            categoryEn = keywordMapping.getKeywordForCategory(category);
+        }
+
 
         if (categoryEn.isEmpty()) {
-            textChannel.sendMessage(MessageConstants.AVAILABLE_CATEGORY).queue();
+            textChannel.sendMessage(MessageConstants.getAvailableCategoryMessage(keywordMapping.toKeyString())).queue();
             return;
         }
 
-        textChannel.sendMessage(MessageConstants.getNewsFetchingMessage(category)).queue();
-        ArrayList<String> newsSummary = seleniumService.crawling(categoryEn);
+        textChannel.sendMessage(MessageConstants.getNewsFetchingMessage(keywordMapping.getKrName(), category)).queue();
+        ArrayList<String> newsSummary = seleniumService.crawling(media, categoryEn);
 
         try {
             for (String summary : newsSummary) {

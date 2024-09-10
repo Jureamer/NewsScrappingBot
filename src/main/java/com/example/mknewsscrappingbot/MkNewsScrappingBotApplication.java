@@ -1,6 +1,7 @@
 package com.example.mknewsscrappingbot;
 
 import com.example.mknewsscrappingbot.domain.DiscordBot;
+import com.example.mknewsscrappingbot.domain.DiscordListener;
 import com.example.mknewsscrappingbot.domain.SeleniumService;
 import net.dv8tion.jda.api.JDA;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +14,12 @@ import org.springframework.context.annotation.Bean;
 public class MkNewsScrappingBotApplication {
     private final SeleniumService seleniumService;
     private final DiscordBot discordBot;
+    private final DiscordListener discordListener;
 
-
-    @Autowired
-    public MkNewsScrappingBotApplication(SeleniumService seleniumService, DiscordBot discordBot) {
+    public MkNewsScrappingBotApplication(SeleniumService seleniumService, DiscordBot discordBot, DiscordListener discordListener) {
         this.seleniumService = seleniumService;
         this.discordBot = discordBot;
+        this.discordListener = discordListener;
     }
 
 

@@ -14,10 +14,12 @@ public class DiscordBot {
     @Value("${discord.bot.token}")
     private String discordBotToken;
     private SeleniumService seleniumService;
+    private DiscordListener discordListener;
     private JDA jda;
 
-    public DiscordBot(SeleniumService seleniumService) {
+    public DiscordBot(SeleniumService seleniumService, DiscordListener discordListener) {
         this.seleniumService = seleniumService;
+        this.discordListener = discordListener;
     }
 
     public JDA getDiscordBot() {
@@ -29,7 +31,7 @@ public class DiscordBot {
             this.jda = JDABuilder.createDefault(discordBotToken)
                 .setActivity(Activity.playing(MessageConstants.WAIT_FOR_MESSAGE))
                 .enableIntents(GatewayIntent.MESSAGE_CONTENT)
-                .addEventListeners(new DiscordListener(seleniumService))
+                .addEventListeners(discordListener)
                 .build();
         }
 
