@@ -1,12 +1,11 @@
-package com.example.mknewsscrappingbot.config;
+package com.example.mknewsscrappingbot.domain;
 
+import com.example.mknewsscrappingbot.data.ErrorConstants;
 import com.example.mknewsscrappingbot.data.MessageConstants;
-import com.example.mknewsscrappingbot.service.SeleniumService;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -22,13 +21,18 @@ public class DiscordBot {
     }
 
     public JDA getDiscordBot() {
+        if (discordBotToken == null || discordBotToken.isEmpty()) {
+            throw new IllegalStateException(ErrorConstants.DISCORD_BOT_TOKEN_IS_NOT_SET);
+        }
+
         if (this.jda == null) {
             this.jda = JDABuilder.createDefault(discordBotToken)
-                    .setActivity(Activity.playing(MessageConstants.WAIT_FOR_MESSAGE))
-                    .enableIntents(GatewayIntent.MESSAGE_CONTENT)
-                    .addEventListeners(new DiscordListener(seleniumService))
-                    .build();
+                .setActivity(Activity.playing(MessageConstants.WAIT_FOR_MESSAGE))
+                .enableIntents(GatewayIntent.MESSAGE_CONTENT)
+                .addEventListeners(new DiscordListener(seleniumService))
+                .build();
         }
-            return jda;
+
+        return jda;
     }
 }

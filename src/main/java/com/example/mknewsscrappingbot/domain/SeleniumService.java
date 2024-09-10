@@ -1,46 +1,25 @@
-package com.example.mknewsscrappingbot.service;
+package com.example.mknewsscrappingbot.domain;
 
 import com.example.mknewsscrappingbot.data.KeywordMapping;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Array;
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 @Service
 public class SeleniumService {
-    private WebDriver driver;
-    public static String WEB_DRIVER_ID = "webdriver.gecko.driver";
-//    public static String WEB_DRIVER_PATH = "/Users/han/Downloads/geckodriver";
-    public static String WEB_DRIVER_PATH = "/usr/bin/geckodriver";
+
+    private final WebDriver driver = new SeleniumDriver().getDriver();
 
     public ArrayList<String> crawling(String category) {
-
-        System.setProperty(WEB_DRIVER_ID, WEB_DRIVER_PATH);
-
-        // 2. WebDriver 옵션 설정
-        FirefoxOptions options = new FirefoxOptions();
-
-        options.addArguments("--start-maximized"); //최대크기로
-        options.addArguments("--headless"); // Browser를 띄우지 않음
-        options.addArguments("--disable-gpu"); // GPU를 사용하지 않음, Linux에서 headless를 사용하는 경우 필요함.
-        options.addArguments("--no-sandbox"); // Sandbox 프로세스를 사용하지 않음, Linux에서 headless를 사용하는 경우 필요함.
-        options.addArguments("--disable-popup-blocking"); //팝업 무시
-        options.addArguments("--disable-default-apps"); // 기본앱 사용안함
-        driver = new FirefoxDriver(options);
-
         String requestUrl = "https://www.mk.co.kr/";
         ArrayList<String> returnMessageArray = new ArrayList<>();
         StringBuilder returnMessage = new StringBuilder();

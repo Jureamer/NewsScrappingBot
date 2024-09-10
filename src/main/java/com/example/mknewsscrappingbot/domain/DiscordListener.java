@@ -1,8 +1,7 @@
-package com.example.mknewsscrappingbot.config;
+package com.example.mknewsscrappingbot.domain;
 
 import com.example.mknewsscrappingbot.data.KeywordMapping;
 import com.example.mknewsscrappingbot.data.MessageConstants;
-import com.example.mknewsscrappingbot.service.SeleniumService;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -11,11 +10,11 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.concurrent.ScheduledExecutorService;
 
 @Component
 public class DiscordListener extends ListenerAdapter {
-    private SeleniumService seleniumService;
+    private final SeleniumService seleniumService;
+
     public DiscordListener(SeleniumService seleniumService) {
         this.seleniumService = seleniumService;
     }
@@ -31,8 +30,9 @@ public class DiscordListener extends ListenerAdapter {
         }
 
         String content = message.getContentDisplay();
+        String START_COMMAND = "!뉴스";
 
-        if (content.startsWith("!뉴스")) {
+        if (content.startsWith(START_COMMAND)) {
             crawlingSpecificNews(textChannel, content);
         } else {
             textChannel.sendMessage(MessageConstants.UNKNOWN_COMMAND).queue();
