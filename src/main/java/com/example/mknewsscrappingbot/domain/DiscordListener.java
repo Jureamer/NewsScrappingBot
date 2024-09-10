@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 @Component
 public class DiscordListener extends ListenerAdapter {
@@ -73,8 +74,10 @@ public class DiscordListener extends ListenerAdapter {
         textChannel.sendMessage(MessageConstants.getNewsFetchingMessage(keywordMapping.getKrName(), category)).queue();
         ArrayList<EmbedBuilder> newsSummary = seleniumService.crawling(media, categoryEn);
 
-        for (EmbedBuilder summary : newsSummary) {
-            textChannel.sendMessageEmbeds(summary.build()).queue();
-        }
+        textChannel.sendMessage("여기 뉴스 내용입니다:")
+                .addEmbeds(newsSummary.stream()
+                .map(EmbedBuilder::build)
+                .collect(Collectors.toList()))
+                .queue();
     }
 }

@@ -40,7 +40,6 @@ public class SeleniumService {
         }
 
         ArrayList<EmbedBuilder> returnMessageArray = new ArrayList<>();
-        EmbedBuilder returnMessage = new EmbedBuilder();
 
         int rank = 1;
 
@@ -48,14 +47,8 @@ public class SeleniumService {
 
         for (Article article : existingArticles) {
             EmbedBuilder message = createEmbedMessage(rank, article.getTitle(), article.getContent(), article.getUrl());
-            returnMessage.setDescription(message.getDescriptionBuilder());
+            returnMessageArray.add(message);
             rank++;
-
-            // Split messages into chunks of 5
-            if (rank % 5 == 1 && rank != 1) {
-                returnMessageArray.add(returnMessage);
-                returnMessage = new EmbedBuilder();
-            }
         }
 
         if (rank <= 10) {
@@ -67,8 +60,10 @@ public class SeleniumService {
                 try {
                     driver.get(url);
                     articleScraper.waitForPageLoad(driver);
+
                     String title = articleScraper.extractTitle(driver);
                     String content = articleScraper.extractContent(driver);
+
                     articleRepository.save(
                             new Article.ArticleBuilder()
                                     .media(media)
@@ -80,16 +75,9 @@ public class SeleniumService {
                                     .build());
 
                     EmbedBuilder message = createEmbedMessage(rank, title, content, url);
-                    returnMessage.setDescription(message.getDescriptionBuilder());
+                    returnMessageArray.add(message);
                     rank++;
 
-                    // Split messages into chunks of 5
-                    if (rank % 5 == 1 && rank != 1) {
-                        returnMessageArray.add(returnMessage);
-                        returnMessage = new EmbedBuilder();
-                    }
-
-                    // Stop if we have 10 articles
                     if (rank > 10) {
                         break;
                     }
@@ -104,10 +92,10 @@ public class SeleniumService {
 
     private EmbedBuilder createEmbedMessage(int rank, String title, String content, String url) {
         EmbedBuilder eb = new EmbedBuilder()
-                .setTitle("[" + rank + "] " + title)
+                .setTitle("[" + rank + "]" + title)
+                .setColor(Color.YELLOW)
                 .setDescription(content)
-                .addField("링크", url, false)
-                .setColor(Color.BLUE);
+                .addField("링크", "[클릭하여 보기](" + url + ")", true);
         return eb;
     }
 }
