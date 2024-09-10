@@ -91,6 +91,7 @@ public class SeleniumService {
                 returnMessage.append("제목 : ").append(title).append("\n");
                 returnMessage.append("내용 : ").append(content);
                 returnMessage.append("링크 : ").append("<").append(url).append(">").append("\n");
+
                 rank += 1;
 
                 if (rank == 6 || rank == 11) {

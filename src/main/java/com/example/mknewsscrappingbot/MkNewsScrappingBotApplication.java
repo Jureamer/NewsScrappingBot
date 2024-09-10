@@ -30,8 +30,6 @@ public class MkNewsScrappingBotApplication {
         ApplicationContext context = SpringApplication.run(MkNewsScrappingBotApplication.class, args);
         MkNewsScrappingBotApplication application = context.getBean(MkNewsScrappingBotApplication.class);
         JDA jda = application.initializeBot();
-
-        System.out.println("Hello, World!" + jda);
     }
 
     @Bean

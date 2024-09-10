@@ -34,7 +34,7 @@ public class DiscordListener extends ListenerAdapter {
         if (content.startsWith("!뉴스")) {
             String[] parts = content.split(" ");
             if (parts.length > 1) {
-                String category = parts[1];
+                String category = parts[1].toUpperCase();
                 String categoryEn = KeywordMapping.getKeywordForCategory(category);
 
                 if (categoryEn.isEmpty()) {
