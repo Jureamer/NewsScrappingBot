@@ -1,5 +1,6 @@
 package com.example.mknewsscrappingbot.domain;
 
+import com.example.mknewsscrappingbot.data.Article;
 import com.example.mknewsscrappingbot.data.KeywordMapping;
 import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -22,9 +23,11 @@ public class SeleniumService {
     private final String ARTICLE_CONTENT_XPATH = "//*[@id='container']/section/div[3]/section/div[1]/div[1]/div[1]";
     private final String NEWS_WRAP_CLASS = ".best_view_news_wrap";
     private final String NEWS_NODE_CSS_SELECTOR = "li.news_node";
+    private final ArticleRepository articleRepository;
 
-    public SeleniumService(SeleniumDriver seleniumDriver) {
+    public SeleniumService(SeleniumDriver seleniumDriver, ArticleRepository articleRepository) {
         this.driver = seleniumDriver.getDriver();
+        this.articleRepository = articleRepository;
     }
 
     public ArrayList<String> crawling(String category) {
@@ -40,6 +43,8 @@ public class SeleniumService {
 
                 String title = extractTitle();
                 String content = extractContent();
+
+                articleRepository.save(new Article("매일경제", category, rank, title, content, url));
 
                 StringBuilder returnMessage = createMessage(rank, title, content, url);
                 returnMessageArray.add(returnMessage.toString());
