@@ -32,34 +32,61 @@ public class SeleniumService {
 
     public ArrayList<String> crawling(String category) {
         ArrayList<String> returnMessageArray = new ArrayList<>();
-        List<String> urls = getTop10Urls(category);
+        StringBuilder returnMessage = new StringBuilder();
 
-        try {
-            int rank = 1;
-            for (String url : urls) {
-                driver.get(url);
+        int rank = 1;
 
-                waitForPageLoad();
+        List<Article> existingArticles = articleRepository.findByCategoryOrderByRank(category);
 
-                String title = extractTitle();
-                String content = extractContent();
+        for (Article article : existingArticles) {
+            returnMessage.append(createMessage(rank, article.getTitle(), article.getContent(), article.getUrl()));
+            rank++;
 
-                articleRepository.save(new Article("매일경제", category, rank, title, content, url));
-
-                StringBuilder returnMessage = createMessage(rank, title, content, url);
+            // Split messages into chunks of 5
+            if (rank == 6 || rank == 11) {
                 returnMessageArray.add(returnMessage.toString());
+                returnMessage = new StringBuilder();
+            }
+        }
 
-                rank++;
+        if (rank <= 10) {
+            List<String> urls = getTop10Urls(category);
+            for (String url : urls) {
+                try {
+                    driver.get(url);
+                    waitForPageLoad();
 
-                if (rank == 6 || rank == 11) {
-                    returnMessage = new StringBuilder();
+                    String title = extractTitle();
+                    String content = extractContent();
+                    articleRepository.save(
+                            new Article.ArticleBuilder()
+                                    .media("매일경제")
+                                    .category(category)
+                                    .rank(rank)
+                                    .title(title)
+                                    .content(content)
+                                    .link(url)
+                                    .build());
+                    returnMessage.append(createMessage(rank, title, content, url));
+
+                    rank++;
+
+                    // Split messages into chunks of 5
+                    if (rank == 6 || rank == 11) {
+                        returnMessageArray.add(returnMessage.toString());
+                        returnMessage = new StringBuilder();
+                    }
+
+                    // Stop if we have 10 articles
+                    if (rank > 10) {
+                        break;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
-            return returnMessageArray;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return returnMessageArray;
         }
+        return returnMessageArray;
     }
 
     private List<String> getTop10Urls(String category) {
@@ -121,8 +148,7 @@ public class SeleniumService {
     private StringBuilder createMessage(int rank, String title, String content, String url) {
         return new StringBuilder()
                 .append("[").append(rank).append("] ").append(title).append("\n")
-                .append("내용 : ").append("\n")
-                .append(content).append("\n")
-                .append("링크 : <").append(url).append(">").append("\n");
+                .append(content)
+                .append("링크 : <").append(url).append(">").append("\n\n");
     }
 }
