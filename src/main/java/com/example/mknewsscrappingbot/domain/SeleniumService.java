@@ -1,10 +1,12 @@
 package com.example.mknewsscrappingbot.domain;
 
 import com.example.mknewsscrappingbot.data.Article;
+import net.dv8tion.jda.api.EmbedBuilder;
 import org.openqa.selenium.*;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,28 +32,29 @@ public class SeleniumService {
         this.articleScraper =  articleScraper;
     }
 
-    public ArrayList<String> crawling(String media, String category) {
+    public ArrayList<EmbedBuilder> crawling(String media, String category) {
         if (media.equals("MK")) {
             articleScraper = mkArticleScraper;
         } else {
             articleScraper = csArticleScraper;
         }
 
-        ArrayList<String> returnMessageArray = new ArrayList<>();
-        StringBuilder returnMessage = new StringBuilder();
+        ArrayList<EmbedBuilder> returnMessageArray = new ArrayList<>();
+        EmbedBuilder returnMessage = new EmbedBuilder();
 
         int rank = 1;
 
         List<Article> existingArticles = articleRepository.findByCategoryOrderByRank(category);
 
         for (Article article : existingArticles) {
-            returnMessage.append(createMessage(rank, article.getTitle(), article.getContent(), article.getUrl()));
+            EmbedBuilder message = createEmbedMessage(rank, article.getTitle(), article.getContent(), article.getUrl());
+            returnMessage.setDescription(message.getDescriptionBuilder());
             rank++;
 
             // Split messages into chunks of 5
-            if (rank == 6 || rank == 11) {
-                returnMessageArray.add(returnMessage.toString());
-                returnMessage = new StringBuilder();
+            if (rank % 5 == 1 && rank != 1) {
+                returnMessageArray.add(returnMessage);
+                returnMessage = new EmbedBuilder();
             }
         }
 
@@ -75,20 +78,22 @@ public class SeleniumService {
                                     .content(content)
                                     .link(url)
                                     .build());
-                    returnMessage.append(createMessage(rank, title, content, url));
 
+                    EmbedBuilder message = createEmbedMessage(rank, title, content, url);
+                    returnMessage.setDescription(message.getDescriptionBuilder());
                     rank++;
 
                     // Split messages into chunks of 5
-                    if (rank == 6 || rank == 11) {
-                        returnMessageArray.add(returnMessage.toString());
-                        returnMessage = new StringBuilder();
+                    if (rank % 5 == 1 && rank != 1) {
+                        returnMessageArray.add(returnMessage);
+                        returnMessage = new EmbedBuilder();
                     }
 
                     // Stop if we have 10 articles
                     if (rank > 10) {
                         break;
                     }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -97,10 +102,12 @@ public class SeleniumService {
         return returnMessageArray;
     }
 
-    private StringBuilder createMessage(int rank, String title, String content, String url) {
-        return new StringBuilder()
-                .append("[").append(rank).append("] ").append(title).append("\n")
-                .append(content)
-                .append("링크 : <").append(url).append(">").append("\n\n");
+    private EmbedBuilder createEmbedMessage(int rank, String title, String content, String url) {
+        EmbedBuilder eb = new EmbedBuilder()
+                .setTitle("[" + rank + "] " + title)
+                .setDescription(content)
+                .addField("링크", url, false)
+                .setColor(Color.BLUE);
+        return eb;
     }
 }

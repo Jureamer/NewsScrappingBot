@@ -4,6 +4,7 @@ import com.example.mknewsscrappingbot.data.CsKeywordMapping;
 import com.example.mknewsscrappingbot.data.IKeywordMapping;
 import com.example.mknewsscrappingbot.data.MkKeywordMapping;
 import com.example.mknewsscrappingbot.data.MessageConstants;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -15,6 +16,8 @@ import java.util.ArrayList;
 
 @Component
 public class DiscordListener extends ListenerAdapter {
+    private static final String MK_START_COMMAND = "/mk";
+    private static final String CS_START_COMMAND = "/cs";
     private final SeleniumService seleniumService;
     private IKeywordMapping keywordMapping;
 
@@ -38,8 +41,7 @@ public class DiscordListener extends ListenerAdapter {
         }
 
         String content = message.getContentDisplay();
-        String MK_START_COMMAND = "/mk";
-        String CS_START_COMMAND = "/cs";
+
 
         if (content.startsWith(MK_START_COMMAND)) {
             keywordMapping = new MkKeywordMapping();
@@ -61,13 +63,7 @@ public class DiscordListener extends ListenerAdapter {
         }
 
         String category = parts[1].toUpperCase();
-        String categoryEn = "";
-        if (media.equals("MK")) {
-            categoryEn = keywordMapping.getKeywordForCategory(category);
-        } else {
-            categoryEn = keywordMapping.getKeywordForCategory(category);
-        }
-
+        String categoryEn = keywordMapping.getKeywordForCategory(category);
 
         if (categoryEn.isEmpty()) {
             textChannel.sendMessage(MessageConstants.getAvailableCategoryMessage(keywordMapping.toKeyString())).queue();
@@ -75,16 +71,10 @@ public class DiscordListener extends ListenerAdapter {
         }
 
         textChannel.sendMessage(MessageConstants.getNewsFetchingMessage(keywordMapping.getKrName(), category)).queue();
-        ArrayList<String> newsSummary = seleniumService.crawling(media, categoryEn);
+        ArrayList<EmbedBuilder> newsSummary = seleniumService.crawling(media, categoryEn);
 
-        try {
-            for (String summary : newsSummary) {
-
-                textChannel.sendMessage(summary).queue();
-                Thread.sleep(1);
-            }
-        }  catch (InterruptedException e) {
-            throw new RuntimeException(e);
+        for (EmbedBuilder summary : newsSummary) {
+            textChannel.sendMessageEmbeds(summary.build()).queue();
         }
     }
 }
