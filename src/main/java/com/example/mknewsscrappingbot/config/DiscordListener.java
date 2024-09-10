@@ -9,13 +9,16 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.concurrent.ScheduledExecutorService;
+
 @Component
 public class DiscordListener extends ListenerAdapter {
     private SeleniumService seleniumService;
-
     public DiscordListener(SeleniumService seleniumService) {
         this.seleniumService = seleniumService;
     }
+
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
         User user = event.getAuthor();
@@ -37,26 +40,24 @@ public class DiscordListener extends ListenerAdapter {
                 if (categoryEn.isEmpty()) {
                     textChannel.sendMessage("사용 가능한 카테고리: 경제, 비즈니스, IT, 사회, 세계, 부동산, 주식, 정치, 문화, 스포츠 ").queue();
                 }
-                String newsSummary = seleniumService.crawling(category);
-                textChannel.sendMessage(newsSummary).queue();
+                textChannel.sendMessage(category + "뉴스를 가져옵니다.").queue();
+                ArrayList<String> newsSummary = seleniumService.crawling(category);
+
+                try {
+                    for (String summary : newsSummary) {
+                        textChannel.sendMessage(summary).queue();
+                        Thread.sleep(1);
+                    }
+                }  catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             } else {
                 textChannel.sendMessage("카테고리를 입력해 주세요. 예: !뉴스 경제").queue();
             }
         }
     }
 
-    private String sendMessage(MessageReceivedEvent event, String message) {
-        User user = event.getAuthor();
-        String returnMessage = "";
-
-        switch (message) {
-            case "뉴스":
-                returnMessage = "뉴스를 가져옵니다.";
-                break;
-            default:
-                returnMessage = "알 수 없는 명령어입니다.";
-                break;
-        }
+    private String sendMessage(String message) {
             return message;
     }
 }
