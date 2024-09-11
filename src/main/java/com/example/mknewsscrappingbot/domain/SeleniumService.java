@@ -64,7 +64,7 @@ public class SeleniumService {
         if (rank <= 10) {
             List<String> urls = articleScraper.getTopUrlsByCategory(driver, category);
 
-            System.out.println("Crawling " + media + " " + category + " articles...");
+            System.out.println("Crawling " + media + " " + category + " articles....");
 
             for (String url : urls) {
                 try {
