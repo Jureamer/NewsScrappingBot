@@ -18,7 +18,7 @@ public class SeleniumDriver {
             FirefoxOptions options = new FirefoxOptions();
 
             options.addArguments("--start-maximized"); //최대크기로
-//            options.addArguments("--headless"); // Browser를 띄우지 않음
+            options.addArguments("--headless"); // Browser를 띄우지 않음
             options.addArguments("--disable-gpu"); // GPU를 사용하지 않음, Linux에서 headless를 사용하는 경우 필요함.
             options.addArguments("--no-sandbox"); // Sandbox 프로세스를 사용하지 않음, Linux에서 headless를 사용하는 경우 필요함.
             options.addArguments("--disable-popup-blocking"); //팝업 무시
