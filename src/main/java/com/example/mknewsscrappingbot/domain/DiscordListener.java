@@ -46,7 +46,7 @@ public class DiscordListener extends ListenerAdapter {
 
         if (content.startsWith(MK_START_COMMAND)) {
             keywordMapping = new MkKeywordMapping();
-            crawlingSpecificNews(textChannel, content, "MK");
+            crawlingSpecificNews(textChannel, content, "MKtest");
         } else if(content.startsWith(CS_START_COMMAND)) {
             keywordMapping = new CsKeywordMapping();
             crawlingSpecificNews(textChannel, content, "CS");
