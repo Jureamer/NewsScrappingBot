@@ -1,9 +1,6 @@
 package com.example.mknewsscrappingbot.domain;
 
-import com.example.mknewsscrappingbot.data.CsKeywordMapping;
-import com.example.mknewsscrappingbot.data.IKeywordMapping;
-import com.example.mknewsscrappingbot.data.MkKeywordMapping;
-import com.example.mknewsscrappingbot.data.MessageConstants;
+import com.example.mknewsscrappingbot.data.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
@@ -19,6 +16,7 @@ import java.util.stream.Collectors;
 public class DiscordListener extends ListenerAdapter {
     private static final String MK_START_COMMAND = "/mk";
     private static final String CS_START_COMMAND = "/cs";
+    private static final String JA_START_COMMAND = "/ja";
     private final SeleniumService seleniumService;
     private IKeywordMapping keywordMapping;
 
@@ -50,7 +48,10 @@ public class DiscordListener extends ListenerAdapter {
         } else if(content.startsWith(CS_START_COMMAND)) {
             keywordMapping = new CsKeywordMapping();
             crawlingSpecificNews(textChannel, content, "CS");
-        }else {
+        }else if(content.startsWith(JA_START_COMMAND)) {
+            keywordMapping = new JaKeywordMapping();
+            crawlingSpecificNews(textChannel, content, "JA");
+        } else {
             textChannel.sendMessage(MessageConstants.UNKNOWN_COMMAND).queue();
         }
     }
