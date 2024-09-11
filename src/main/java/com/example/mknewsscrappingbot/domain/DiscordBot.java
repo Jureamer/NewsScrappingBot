@@ -1,7 +1,7 @@
 package com.example.mknewsscrappingbot.domain;
 
-import com.example.mknewsscrappingbot.data.ErrorConstants;
-import com.example.mknewsscrappingbot.data.MessageConstants;
+import com.example.mknewsscrappingbot.constant.ErrorConstants;
+import com.example.mknewsscrappingbot.constant.MessageConstants;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;

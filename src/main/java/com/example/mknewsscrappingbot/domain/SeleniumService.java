@@ -19,6 +19,7 @@ public class SeleniumService {
     private final CsArticleScraper csArticleScraper;
     private final JaArticleScraper jaArticleScraper;
     private final DaArticleScraper daArticleScraper;
+    private final HkArticleScraper hkArticleScraper;
     private ArticleScraper articleScraper;
 
     public SeleniumService(
@@ -28,6 +29,7 @@ public class SeleniumService {
             @Qualifier("csArticleScraper") CsArticleScraper csArticleScraper,
             @Qualifier("jaArticleScraper") JaArticleScraper jaArticleScraper,
             @Qualifier("daArticleScraper") DaArticleScraper daArticleScraper,
+            @Qualifier("hkArticleScraper") HkArticleScraper hkArticleScraper,
             @Qualifier("mkArticleScraper") ArticleScraper articleScraper) {
         this.driver = seleniumDriver.getDriver();
         this.articleRepository = articleRepository;
@@ -35,12 +37,15 @@ public class SeleniumService {
         this.csArticleScraper = csArticleScraper;
         this.jaArticleScraper = jaArticleScraper;
         this.daArticleScraper = daArticleScraper;
+        this.hkArticleScraper = hkArticleScraper;
         this.articleScraper =  articleScraper;
     }
 
     public ArrayList<EmbedBuilder> crawling(String media, String category) {
         if (media.equals("MK")) {
             articleScraper = mkArticleScraper;
+        } else if(media.equals("HK")) {
+            articleScraper = hkArticleScraper;
         } else if(media.equals("CS")) {
             articleScraper = csArticleScraper;
         } else if(media.equals("JA")) {

@@ -1,4 +1,4 @@
-package com.example.mknewsscrappingbot.data;
+package com.example.mknewsscrappingbot.constant;
 
 public class MessageConstants {
     public static final String UNKNOWN_COMMAND = "알 수 없는 명령어입니다. '/사용법' 을 입력하여 사용 가능한 명령어를 확인해 주세요.";
