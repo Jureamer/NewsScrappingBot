@@ -9,8 +9,7 @@ import org.springframework.stereotype.Component;
 public class SeleniumDriver {
     private WebDriver driver = null;
     public static String WEB_DRIVER_ID = "webdriver.gecko.driver";
-//        public static String WEB_DRIVER_PATH = "/Users/han/Downloads/geckodriver";
-    public static String WEB_DRIVER_PATH = "/usr/bin/geckodriver";
+    public static String WEB_DRIVER_PATH = "/usr/local/bin/geckodriver";
 
     public WebDriver getDriver() {
         if (driver == null) {
