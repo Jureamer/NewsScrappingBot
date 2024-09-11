@@ -18,6 +18,7 @@ public class SeleniumService {
     private final MkArticleScraper mkArticleScraper;
     private final CsArticleScraper csArticleScraper;
     private final JaArticleScraper jaArticleScraper;
+    private final DaArticleScraper daArticleScraper;
     private ArticleScraper articleScraper;
 
     public SeleniumService(
@@ -26,12 +27,14 @@ public class SeleniumService {
             @Qualifier("mkArticleScraper") MkArticleScraper mkArticleScraper,
             @Qualifier("csArticleScraper") CsArticleScraper csArticleScraper,
             @Qualifier("jaArticleScraper") JaArticleScraper jaArticleScraper,
+            @Qualifier("daArticleScraper") DaArticleScraper daArticleScraper,
             @Qualifier("mkArticleScraper") ArticleScraper articleScraper) {
         this.driver = seleniumDriver.getDriver();
         this.articleRepository = articleRepository;
         this.mkArticleScraper = mkArticleScraper;
         this.csArticleScraper = csArticleScraper;
         this.jaArticleScraper = jaArticleScraper;
+        this.daArticleScraper = daArticleScraper;
         this.articleScraper =  articleScraper;
     }
 
@@ -42,6 +45,8 @@ public class SeleniumService {
             articleScraper = csArticleScraper;
         } else if(media.equals("JA")) {
             articleScraper = jaArticleScraper;
+        } else if(media.equals("DA")) {
+            articleScraper = daArticleScraper;
         }
 
         ArrayList<EmbedBuilder> returnMessageArray = new ArrayList<>();

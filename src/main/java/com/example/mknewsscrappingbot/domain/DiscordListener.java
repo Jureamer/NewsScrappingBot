@@ -17,6 +17,7 @@ public class DiscordListener extends ListenerAdapter {
     private static final String MK_START_COMMAND = "/mk";
     private static final String CS_START_COMMAND = "/cs";
     private static final String JA_START_COMMAND = "/ja";
+    private static final String DA_START_COMMAND = "/da";
     private final SeleniumService seleniumService;
     private IKeywordMapping keywordMapping;
 
@@ -48,9 +49,12 @@ public class DiscordListener extends ListenerAdapter {
         } else if(content.startsWith(CS_START_COMMAND)) {
             keywordMapping = new CsKeywordMapping();
             crawlingSpecificNews(textChannel, content, "CS");
-        }else if(content.startsWith(JA_START_COMMAND)) {
+        } else if(content.startsWith(JA_START_COMMAND)) {
             keywordMapping = new JaKeywordMapping();
             crawlingSpecificNews(textChannel, content, "JA");
+        } else if(content.startsWith(DA_START_COMMAND)) {
+            keywordMapping = new DaKeywordMapping();
+            crawlingSpecificNews(textChannel, content, "DA");
         } else {
             textChannel.sendMessage(MessageConstants.UNKNOWN_COMMAND).queue();
         }
