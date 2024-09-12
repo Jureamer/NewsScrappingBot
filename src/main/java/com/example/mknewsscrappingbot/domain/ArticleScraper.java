@@ -31,6 +31,4 @@ public interface ArticleScraper {
 
     String extractTitle(WebDriver driver);
     String extractContent(WebDriver driver);
-
-
 }

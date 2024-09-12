@@ -15,47 +15,20 @@ public class SeleniumService {
 
     private final WebDriver driver;
     private final ArticleRepository articleRepository;
-    private final MkArticleScraper mkArticleScraper;
-    private final CsArticleScraper csArticleScraper;
-    private final JaArticleScraper jaArticleScraper;
-    private final DaArticleScraper daArticleScraper;
-    private final HkArticleScraper hkArticleScraper;
-    private ArticleScraper articleScraper;
+    private final ArticleScraperFactory articleScraperFactory;
 
     public SeleniumService(
             SeleniumDriver seleniumDriver,
             ArticleRepository articleRepository,
-            @Qualifier("mkArticleScraper") MkArticleScraper mkArticleScraper,
-            @Qualifier("csArticleScraper") CsArticleScraper csArticleScraper,
-            @Qualifier("jaArticleScraper") JaArticleScraper jaArticleScraper,
-            @Qualifier("daArticleScraper") DaArticleScraper daArticleScraper,
-            @Qualifier("hkArticleScraper") HkArticleScraper hkArticleScraper,
-            @Qualifier("mkArticleScraper") ArticleScraper articleScraper) {
+            ArticleScraperFactory articleScraperFactory) {
         this.driver = seleniumDriver.getDriver();
         this.articleRepository = articleRepository;
-        this.mkArticleScraper = mkArticleScraper;
-        this.csArticleScraper = csArticleScraper;
-        this.jaArticleScraper = jaArticleScraper;
-        this.daArticleScraper = daArticleScraper;
-        this.hkArticleScraper = hkArticleScraper;
-        this.articleScraper =  articleScraper;
+        this.articleScraperFactory = articleScraperFactory;
     }
 
     public ArrayList<EmbedBuilder> crawling(String media, String category) {
-        if (media.equals("MK")) {
-            articleScraper = mkArticleScraper;
-        } else if(media.equals("HK")) {
-            articleScraper = hkArticleScraper;
-        } else if(media.equals("CS")) {
-            articleScraper = csArticleScraper;
-        } else if(media.equals("JA")) {
-            articleScraper = jaArticleScraper;
-        } else if(media.equals("DA")) {
-            articleScraper = daArticleScraper;
-        }
-
+        ArticleScraper articleScraper = articleScraperFactory.getArticleScraper(media);
         ArrayList<EmbedBuilder> returnMessageArray = new ArrayList<>();
-
         int rank = 1;
 
         List<Article> existingArticles = articleRepository.findByCategoryOrderByRank(category);

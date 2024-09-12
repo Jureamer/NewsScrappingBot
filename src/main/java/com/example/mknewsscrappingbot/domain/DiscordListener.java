@@ -1,5 +1,6 @@
 package com.example.mknewsscrappingbot.domain;
 
+import com.example.mknewsscrappingbot.command.*;
 import com.example.mknewsscrappingbot.constant.MessageConstants;
 import com.example.mknewsscrappingbot.data.*;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -43,51 +44,22 @@ public class DiscordListener extends ListenerAdapter {
         }
 
         String content = message.getContentDisplay();
-
+        Command command;
 
         if (content.startsWith(MK_START_COMMAND)) {
-            keywordMapping = new MkKeywordMapping();
-            crawlingSpecificNews(textChannel, content, "MK");
+            command = new MkCommand(seleniumService);
         } else if(content.startsWith(HK_START_COMMAND)) {
-            keywordMapping = new HkKeywordMapping();
-            crawlingSpecificNews(textChannel, content, "HK");
+            command = new HkCommand(seleniumService);
         } else if(content.startsWith(CS_START_COMMAND)) {
-            keywordMapping = new CsKeywordMapping();
-            crawlingSpecificNews(textChannel, content, "CS");
+            command = new CsCommand(seleniumService);
         } else if(content.startsWith(JA_START_COMMAND)) {
-            keywordMapping = new JaKeywordMapping();
-            crawlingSpecificNews(textChannel, content, "JA");
+            command = new JaCommand(seleniumService);
         } else if(content.startsWith(DA_START_COMMAND)) {
-            keywordMapping = new DaKeywordMapping();
-            crawlingSpecificNews(textChannel, content, "DA");
+            command = new DaCommand(seleniumService);
         } else {
             textChannel.sendMessage(MessageConstants.UNKNOWN_COMMAND).queue();
-        }
-    }
-
-    private void crawlingSpecificNews(TextChannel textChannel, String content, String media) {
-        String[] parts = content.split(" ");
-
-        if (parts.length != 2) {
-            textChannel.sendMessage(MessageConstants.NEED_CATEGORY).queue();
             return;
         }
-
-        String category = parts[1].toUpperCase();
-        String categoryEn = keywordMapping.getKeywordForCategory(category);
-
-        if (categoryEn.isEmpty()) {
-            textChannel.sendMessage(MessageConstants.getAvailableCategoryMessage(keywordMapping.toKeyString())).queue();
-            return;
-        }
-
-        textChannel.sendMessage(MessageConstants.getNewsFetchingMessage(keywordMapping.getKrName(), category)).queue();
-        ArrayList<EmbedBuilder> newsSummary = seleniumService.crawling(media, categoryEn);
-
-        textChannel.sendMessage("여기 뉴스 내용입니다:")
-                .addEmbeds(newsSummary.stream()
-                .map(EmbedBuilder::build)
-                .collect(Collectors.toList()))
-                .queue();
+        command.execute(textChannel, content);
     }
 }
