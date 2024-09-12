@@ -1,5 +1,7 @@
 package com.example.mknewsscrappingbot.domain;
 
+import com.example.mknewsscrappingbot.data.newsSource.DaNewsSource;
+import com.example.mknewsscrappingbot.data.newsSource.NewsSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -10,61 +12,36 @@ import java.util.List;
 import java.util.Objects;
 
 @Component
-public class DaArticleScraper implements ArticleScraper {
-    private final String REQUEST_URL = "https://www.donga.com/";
-    private final String NEWS_WRAP_CSS_SELECTOR = "div.sec_body";
-    private final String NEWS_NODE_CSS_SELECTOR = "li";
-    private final String ARTICLE_TITLE_CSS_SELECTOR = "section.head_group h1";
-    private final String ARTICLE_CONTENT_CSS_SELECTOR = "section.news_view";
+public class DaArticleScraper extends ArticleScraper {
+
+    public DaArticleScraper(DaNewsSource newsSource) {
+        super(newsSource);
+    }
 
     @Override
     public List<String> getTopUrlsByCategory(WebDriver driver, String category) {
-        driver.get(REQUEST_URL + "news/" + category);
+        driver.get(newsSource.getRequestUrl() + "news/" + category);
         waitForPageLoad(driver);
-        waitForElementToBePresent(driver, By.cssSelector(NEWS_WRAP_CSS_SELECTOR));
+        waitForElementToBePresent(driver, By.cssSelector(newsSource.getNewsWrapCssSelector()));
 
         try {
-            WebElement newsWrap = driver.findElement(By.cssSelector(NEWS_WRAP_CSS_SELECTOR));
-            List<WebElement> newsNodes = newsWrap.findElements(By.cssSelector(NEWS_NODE_CSS_SELECTOR));
+            WebElement newsWrap = driver.findElement(By.cssSelector(newsSource.getNewsWrapCssSelector()));
+            List<WebElement> newsNodes = newsWrap.findElements(By.cssSelector(newsSource.getNewsNodeCssSelector()));
             return newsNodes.stream()
-                    .map(newsNode -> {
-                        try {
-                            return newsNode.findElement(By.tagName("a")).getAttribute("href");
-                        } catch (NoSuchElementException e) {
-                            return null;
-                        }
-                    }).filter(Objects::nonNull)
+                    .map(newsNode -> newsNode.findElement(By.tagName("a")).getAttribute("href"))
                     .toList();
-        } catch (NoSuchElementException e) {
-            throw new RuntimeException("뉴스 목록을 찾을 수 없습니다: " + e.getMessage(), e);
         } catch (Exception e) {
-            throw new RuntimeException("알 수 없는 오류가 발생했습니다: " + e.getMessage(), e);
+            throw new RuntimeException(e);
         }
     }
 
     @Override
     public String extractTitle(WebDriver driver) {
-        WebElement titleElement = driver.findElement(By.cssSelector(ARTICLE_TITLE_CSS_SELECTOR));
-        return titleElement.getText();
+        return extractElementText(driver, newsSource.getArticleTitleCssSelector());
     }
 
     @Override
     public String extractContent(WebDriver driver) {
-        WebElement contentWrap = driver.findElement(By.cssSelector(ARTICLE_CONTENT_CSS_SELECTOR));
-        StringBuilder content = new StringBuilder();
-
-        List<WebElement> paragraphs = contentWrap.findElements(By.tagName("p"));
-
-        if (!paragraphs.isEmpty()) {
-            for (WebElement paragraph : paragraphs) {
-                content.append(paragraph.getText()).append("\n");
-                break;
-            }
-        } else {
-            String text = contentWrap.getText();
-            content.append(text.length() > 100 ? text.substring(0, 100) + "..." : text).append("\n");
-        }
-
-        return content.toString();
+        return extractContent(driver, newsSource.getArticleContentCssSelector());
     }
 }

@@ -1,30 +1,32 @@
 package com.example.mknewsscrappingbot.domain;
 
+import com.example.mknewsscrappingbot.data.newsSource.MkNewsSource;
+import com.example.mknewsscrappingbot.data.newsSource.NewsSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class MkArticleScraper implements ArticleScraper {
-    private final String REQUEST_URL = "https://www.mk.co.kr/";
-    private final String ARTICLE_TITLE_XPATH = "//*[@id='container']/section/div[2]/section/div/div/div/h2";
-    private final String ARTICLE_CONTENT_XPATH = "//*[@id='container']/section/div[3]/section/div[1]/div[1]/div[1]";
-    private final String NEWS_WRAP_CLASS = ".best_view_news_wrap";
-    private final String NEWS_NODE_CSS_SELECTOR = "li.news_node";
+public class MkArticleScraper extends ArticleScraper {
+
+    public MkArticleScraper(MkNewsSource newsSource) {
+        super(newsSource);
+    }
 
     @Override
     public List<String> getTopUrlsByCategory(WebDriver driver, String category) {
-        driver.get(REQUEST_URL + "news/" + category);
+        driver.get(newsSource.getRequestUrl() + "news/" + category);
         waitForPageLoad(driver);
-        waitForElementToBePresent(driver, By.cssSelector(NEWS_WRAP_CLASS));
+        waitForElementToBePresent(driver, By.cssSelector(newsSource.getNewsWrapCssSelector()));
 
         try {
-            WebElement newsWrap = driver.findElement(By.cssSelector(NEWS_WRAP_CLASS));
-            List<WebElement> newsNodes = newsWrap.findElements(By.cssSelector(NEWS_NODE_CSS_SELECTOR));
+            WebElement newsWrap = driver.findElement(By.cssSelector(newsSource.getNewsWrapCssSelector()));
+            List<WebElement> newsNodes = newsWrap.findElements(By.cssSelector(newsSource.getNewsNodeCssSelector()));
             return newsNodes.stream()
                     .map(newsNode -> newsNode.findElement(By.tagName("a")).getAttribute("href"))
                     .toList();
@@ -35,27 +37,11 @@ public class MkArticleScraper implements ArticleScraper {
 
     @Override
     public String extractTitle(WebDriver driver) {
-        List<WebElement> titleElements = driver.findElements(By.xpath(ARTICLE_TITLE_XPATH));
-        return titleElements.get(0).getText();
+        return extractElementText(driver, newsSource.getArticleTitleCssSelector());
     }
 
     @Override
     public String extractContent(WebDriver driver) {
-        WebElement contentWrap = driver.findElement(By.xpath(ARTICLE_CONTENT_XPATH));
-        StringBuilder content = new StringBuilder();
-
-        List<WebElement> paragraphs = contentWrap.findElements(By.tagName("p"));
-
-        if (!paragraphs.isEmpty()) {
-            for (WebElement paragraph : paragraphs) {
-                content.append(paragraph.getText()).append("\n");
-                break;
-            }
-        } else {
-            String text = contentWrap.getText();
-            content.append(text.length() > 100 ? text.substring(0, 100) + "..." : text).append("\n");
-        }
-
-        return content.toString();
+        return extractContent(driver, newsSource.getArticleContentCssSelector());
     }
 }

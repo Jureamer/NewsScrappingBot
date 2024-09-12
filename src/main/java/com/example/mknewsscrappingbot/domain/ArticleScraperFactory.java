@@ -1,5 +1,6 @@
 package com.example.mknewsscrappingbot.domain;
 
+import com.example.mknewsscrappingbot.data.newsSource.*;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -10,33 +11,22 @@ public class ArticleScraperFactory {
     private final DaArticleScraper daArticleScraper;
     private final HkArticleScraper hkArticleScraper;
 
-    public ArticleScraperFactory(
-            MkArticleScraper mkArticleScraper,
-            CsArticleScraper csArticleScraper,
-            JaArticleScraper jaArticleScraper,
-            DaArticleScraper daArticleScraper,
-            HkArticleScraper hkArticle) {
-        this.mkArticleScraper = mkArticleScraper;
-        this.csArticleScraper = csArticleScraper;
-        this.jaArticleScraper = jaArticleScraper;
-        this.daArticleScraper = daArticleScraper;
-        this.hkArticleScraper = hkArticle;
+    public ArticleScraperFactory() {
+        this.mkArticleScraper = new MkArticleScraper(new MkNewsSource());
+        this.csArticleScraper = new CsArticleScraper(new CsNewsSource());
+        this.jaArticleScraper = new JaArticleScraper(new JaNewsSource());
+        this.daArticleScraper = new DaArticleScraper(new DaNewsSource());
+        this.hkArticleScraper = new HkArticleScraper(new HkNewsSource());
     }
 
     public ArticleScraper getArticleScraper(String media) {
-        switch (media) {
-            case "MK":
-                return mkArticleScraper;
-            case "HK":
-                return hkArticleScraper;
-            case "CS":
-                return csArticleScraper;
-            case "JA":
-                return jaArticleScraper;
-            case "DA":
-                return daArticleScraper;
-            default:
-                throw new IllegalArgumentException("지원하지 않는 미디어입니다: " + media);
-        }
+        return switch (media) {
+            case "MK" -> mkArticleScraper;
+            case "HK" -> hkArticleScraper;
+            case "CS" -> csArticleScraper;
+            case "JA" -> jaArticleScraper;
+            case "DA" -> daArticleScraper;
+            default -> throw new IllegalArgumentException("지원하지 않는 미디어입니다: " + media);
+        };
     }
 }

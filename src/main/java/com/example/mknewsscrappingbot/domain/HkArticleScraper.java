@@ -1,5 +1,7 @@
 package com.example.mknewsscrappingbot.domain;
 
+import com.example.mknewsscrappingbot.data.newsSource.HkNewsSource;
+import com.example.mknewsscrappingbot.data.newsSource.NewsSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -8,22 +10,20 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class HkArticleScraper implements ArticleScraper {
-    private final String REQUEST_URL = "https://www.hankyung.com/";
-    private final String NEWS_WRAP_CSS_SELECTOR = ".allnews-list";
-    private final String NEWS_NODE_CSS_SELECTOR = "li";
-    private final String ARTICLE_TITLE_CSS_SELECTOR = "h1.headline";
-    private final String ARTICLE_CONTENT_CSS_SELECTOR = ".article-body";
+public class HkArticleScraper extends ArticleScraper {
+    public HkArticleScraper(HkNewsSource newsSource) {
+        super(newsSource);
+    }
 
     @Override
     public List<String> getTopUrlsByCategory(WebDriver driver, String category) {
-        driver.get(REQUEST_URL + category);
+        driver.get(newsSource.getRequestUrl() + "news/" + category);
         waitForPageLoad(driver);
-        waitForElementToBePresent(driver, By.cssSelector(NEWS_WRAP_CSS_SELECTOR));
+        waitForElementToBePresent(driver, By.cssSelector(newsSource.getNewsWrapCssSelector()));
 
         try {
-            WebElement newsWrap = driver.findElement(By.cssSelector(NEWS_WRAP_CSS_SELECTOR));
-            List<WebElement> newsNodes = newsWrap.findElements(By.cssSelector(NEWS_NODE_CSS_SELECTOR));
+            WebElement newsWrap = driver.findElement(By.cssSelector(newsSource.getNewsWrapCssSelector()));
+            List<WebElement> newsNodes = newsWrap.findElements(By.cssSelector(newsSource.getNewsNodeCssSelector()));
             return newsNodes.stream()
                     .map(newsNode -> newsNode.findElement(By.tagName("a")).getAttribute("href"))
                     .toList();
@@ -34,27 +34,11 @@ public class HkArticleScraper implements ArticleScraper {
 
     @Override
     public String extractTitle(WebDriver driver) {
-        List<WebElement> titleElements = driver.findElements(By.cssSelector(ARTICLE_TITLE_CSS_SELECTOR));
-        return titleElements.get(0).getText();
+        return extractElementText(driver, newsSource.getArticleTitleCssSelector());
     }
 
     @Override
     public String extractContent(WebDriver driver) {
-        WebElement contentWrap = driver.findElement(By.cssSelector(ARTICLE_CONTENT_CSS_SELECTOR));
-        StringBuilder content = new StringBuilder();
-
-        List<WebElement> paragraphs = contentWrap.findElements(By.tagName("p"));
-
-        if (!paragraphs.isEmpty()) {
-            for (WebElement paragraph : paragraphs) {
-                content.append(paragraph.getText()).append("\n");
-                break;
-            }
-        } else {
-            String text = contentWrap.getText();
-            content.append(text.length() > 100 ? text.substring(0, 100) + "..." : text).append("\n");
-        }
-
-        return content.toString();
+        return extractContent(driver, newsSource.getArticleContentCssSelector());
     }
 }

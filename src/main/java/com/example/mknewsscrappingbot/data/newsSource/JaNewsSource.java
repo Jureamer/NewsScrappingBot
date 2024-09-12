@@ -1,5 +1,8 @@
 package com.example.mknewsscrappingbot.data.newsSource;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class JaNewsSource extends NewsSource {
     public JaNewsSource() {
         super("https://www.joongang.co.kr/",
