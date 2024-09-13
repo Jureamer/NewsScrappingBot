@@ -14,22 +14,6 @@ public class HkArticleScraper extends ArticleScraper {
         super(newsSource);
     }
 
-    @Override
-    public List<String> getTopUrlsByCategory(WebDriver driver, String category) {
-        driver.get(newsSource.getRequestUrl() + "news/" + category);
-        waitForPageLoad(driver);
-        waitForElementToBePresent(driver, By.cssSelector(newsSource.getNewsWrapCssSelector()));
-
-        try {
-            WebElement newsWrap = driver.findElement(By.cssSelector(newsSource.getNewsWrapCssSelector()));
-            List<WebElement> newsNodes = newsWrap.findElements(By.cssSelector(newsSource.getNewsNodeCssSelector()));
-            return newsNodes.stream()
-                    .map(newsNode -> newsNode.findElement(By.tagName("a")).getAttribute("href"))
-                    .toList();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     @Override
     public String extractTitle(WebDriver driver) {

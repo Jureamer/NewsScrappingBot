@@ -35,5 +35,5 @@ public abstract class NewsSource {
         return articleContentCssSelector;
     }
 
-    public abstract void customizeRequestUrl();
+    public abstract String getCustomRequestUrl(String category);
 }

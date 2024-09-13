@@ -16,7 +16,7 @@ public class CsNewsSource extends NewsSource {
     }
 
     @Override
-    public void customizeRequestUrl() {
-
+    public String getCustomRequestUrl(String category) {
+        return this.getRequestUrl() + category;
     }
 }

@@ -51,6 +51,8 @@ public class SeleniumService {
                     String title = articleScraper.extractTitle(driver);
                     String content = articleScraper.extractContent(driver);
 
+                    System.out.println("Title: " + title);
+                    System.out.println("Content: " + content);
                     articleRepository.save(
                             new Article.ArticleBuilder()
                                     .media(media)
@@ -79,7 +81,7 @@ public class SeleniumService {
 
     private EmbedBuilder createEmbedMessage(int rank, String title, String content, String url) {
         EmbedBuilder eb = new EmbedBuilder()
-                .setTitle("[" + rank + "]" + title)
+                .setTitle("[" + rank + "] " + title)
                 .setColor(Color.YELLOW)
                 .setDescription(content)
                 .addField("링크", "[클릭하여 보기](" + url + ")", true);
