@@ -9,7 +9,7 @@ public class MkNewsSource extends NewsSource {
                 "https://www.mk.co.kr/",
                 ".best_view_news_wrap",
                 ".news_node",
-                "h2.news_ttl",
+                ".txt_area > .news_ttl",
                 ".news_cnt_detail_wrap"
         );
     }
