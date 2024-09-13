@@ -3,7 +3,6 @@ package com.example.mknewsscrappingbot.domain;
 import com.example.mknewsscrappingbot.data.Article;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.openqa.selenium.*;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.awt.*;

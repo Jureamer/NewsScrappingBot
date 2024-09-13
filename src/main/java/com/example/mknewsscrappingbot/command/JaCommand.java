@@ -1,6 +1,6 @@
 package com.example.mknewsscrappingbot.command;
 
-import com.example.mknewsscrappingbot.data.JaKeywordMapping;
+import com.example.mknewsscrappingbot.data.keywordMapping.JaKeywordMapping;
 import com.example.mknewsscrappingbot.domain.SeleniumService;
 
 public class JaCommand extends AbstractCommand{

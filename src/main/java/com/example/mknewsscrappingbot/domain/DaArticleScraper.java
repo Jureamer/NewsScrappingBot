@@ -1,15 +1,12 @@
 package com.example.mknewsscrappingbot.domain;
 
 import com.example.mknewsscrappingbot.data.newsSource.DaNewsSource;
-import com.example.mknewsscrappingbot.data.newsSource.NewsSource;
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Objects;
 
 @Component
 public class DaArticleScraper extends ArticleScraper {

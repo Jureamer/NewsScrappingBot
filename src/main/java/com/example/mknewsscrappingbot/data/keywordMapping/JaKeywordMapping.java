@@ -1,29 +1,27 @@
-package com.example.mknewsscrappingbot.data;
+package com.example.mknewsscrappingbot.data.keywordMapping;
 
 import java.util.HashMap;
 
-public class CsKeywordMapping implements IKeywordMapping {
-    private static final String EN_NAME = "The Chosun Ilbo";
-    private static final String KR_NAME = "조선일보";
+public class JaKeywordMapping implements IKeywordMapping {
+    private static final String EN_NAME = "Jooang Ilbo";
+    private static final String KR_NAME = "중앙일보";
     private static final HashMap<String, String> keywordsMap = new HashMap<String, String>();
 
     static {
+        keywordsMap.put("경제", "money");
+        keywordsMap.put("사회", "society");
+        keywordsMap.put("국제", "world");
         keywordsMap.put("정치", "politics");
-        keywordsMap.put("사회", "national");
-        keywordsMap.put("국제", "international");
-        keywordsMap.put("건강", "medical");
-        keywordsMap.put("재테크", "investment");
+        keywordsMap.put("문화", "culture");
         keywordsMap.put("스포츠", "sports");
-        keywordsMap.put("문화연예", "culture-style");
-        keywordsMap.put("쇼핑", "shopping");
+        keywordsMap.put("라이프", "lifestyle");
+        keywordsMap.put("피플", "people");
     }
 
     public String getKeywordForCategory(String category) {
         return keywordsMap.getOrDefault(category, ""); // 기본값 설정 가능
     }
 
-
-    @Override
     public String toKeyString() {
         return keywordsMap.keySet().toString();
     }
@@ -37,5 +35,4 @@ public class CsKeywordMapping implements IKeywordMapping {
     public String getEnName() {
         return EN_NAME;
     }
-
 }

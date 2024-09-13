@@ -1,6 +1,6 @@
 package com.example.mknewsscrappingbot.command;
 
-import com.example.mknewsscrappingbot.data.HkKeywordMapping;
+import com.example.mknewsscrappingbot.data.keywordMapping.HkKeywordMapping;
 import com.example.mknewsscrappingbot.domain.SeleniumService;
 
 public class HkCommand extends AbstractCommand{

@@ -1,7 +1,6 @@
 package com.example.mknewsscrappingbot.domain;
 
 import com.example.mknewsscrappingbot.data.newsSource.JaNewsSource;
-import com.example.mknewsscrappingbot.data.newsSource.NewsSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;

@@ -1,14 +1,11 @@
 package com.example.mknewsscrappingbot.domain;
 
 import com.example.mknewsscrappingbot.data.newsSource.MkNewsSource;
-import com.example.mknewsscrappingbot.data.newsSource.NewsSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Component

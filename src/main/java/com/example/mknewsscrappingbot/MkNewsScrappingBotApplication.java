@@ -4,7 +4,6 @@ import com.example.mknewsscrappingbot.domain.DiscordBot;
 import com.example.mknewsscrappingbot.domain.DiscordListener;
 import com.example.mknewsscrappingbot.domain.SeleniumService;
 import net.dv8tion.jda.api.JDA;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;

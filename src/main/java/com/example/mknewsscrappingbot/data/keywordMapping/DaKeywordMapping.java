@@ -1,4 +1,4 @@
-package com.example.mknewsscrappingbot.data;
+package com.example.mknewsscrappingbot.data.keywordMapping;
 
 import java.util.HashMap;
 

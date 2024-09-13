@@ -21,12 +21,12 @@ public class Article {
     private String content;
     private String link;
 
-    @CreationTimestamp // INSERT 시 자동으로 값을 채워줌
+    @CreationTimestamp
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
 
     @Column(name = "updated_at")
-    @UpdateTimestamp // UPDATE 시 자동으로 값을 채워줌
+    @UpdateTimestamp
     private LocalDateTime updatedAt = LocalDateTime.now();
 
     public Article() {}

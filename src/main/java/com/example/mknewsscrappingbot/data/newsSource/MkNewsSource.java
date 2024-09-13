@@ -7,10 +7,10 @@ public class MkNewsSource extends NewsSource {
     public MkNewsSource() {
         super(
                 "https://www.mk.co.kr/",
-                "//*[@id='container']/section/div[2]/section/div/div/div/h2",
-                "//*[@id='container']/section/div[3]/section/div[1]/div[1]/div[1]",
                 ".best_view_news_wrap",
-                "li.news_node"
+                ".news_node",
+                "h2.news_ttl",
+                ".news_cnt_detail_wrap"
         );
     }
 

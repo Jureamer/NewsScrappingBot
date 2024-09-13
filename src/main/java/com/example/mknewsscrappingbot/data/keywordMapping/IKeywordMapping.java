@@ -1,4 +1,4 @@
-package com.example.mknewsscrappingbot.data;
+package com.example.mknewsscrappingbot.data.keywordMapping;
 
 public interface IKeywordMapping {
     String KR_NAME = "";
