@@ -1,7 +1,7 @@
 package com.example.mknewsscrappingbot.constant;
 
 public class MessageConstants {
-    public static final String UNKNOWN_COMMAND = "알 수 없는 명령어입니다. '/사용법' 을 입력하여 사용 가능한 명령어를 확인해 주세요.";
+    public static final String UNKNOWN_COMMAND = "알 수 없는 명령어입니다. '/help' 을 입력하여 사용 가능한 명령어를 확인해 주세요.";
 //    public static final String AVAILABLE_COMMAND = "사용 가능한 명령어: /뉴스";
     public static final String NEWS_FETCHING_ERROR = "뉴스를 가져오는 중 오류가 발생했습니다.";
     public static final String NEED_CATEGORY = "카테고리를 입력해 주세요. 예: !뉴스 경제";

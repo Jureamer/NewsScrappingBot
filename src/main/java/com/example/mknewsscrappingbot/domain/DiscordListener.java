@@ -18,6 +18,7 @@ public class DiscordListener extends ListenerAdapter {
     private static final String CS_START_COMMAND = "/cs";
     private static final String JA_START_COMMAND = "/ja";
     private static final String DA_START_COMMAND = "/da";
+    private static final String HELP_START_COMMAND = "/help";
     private final SeleniumService seleniumService;
     private IKeywordMapping keywordMapping;
 
@@ -53,6 +54,8 @@ public class DiscordListener extends ListenerAdapter {
             command = new JaCommand(seleniumService);
         } else if(content.startsWith(DA_START_COMMAND)) {
             command = new DaCommand(seleniumService);
+        } else if(content.startsWith(HELP_START_COMMAND)) {
+            command = new HelpCommand();
         } else {
             textChannel.sendMessage(MessageConstants.UNKNOWN_COMMAND).queue();
             return;
