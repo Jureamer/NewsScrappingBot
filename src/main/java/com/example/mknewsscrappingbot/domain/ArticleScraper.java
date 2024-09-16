@@ -50,8 +50,6 @@ public abstract class ArticleScraper {
 
     public String extractElementText(WebDriver driver, String cssSelector) {
         WebElement element = driver.findElement(By.cssSelector(cssSelector));
-        System.out.println("Element: " + element + " Text: " + element.getText());
-        System.out.println("Element[0]: " + element.getText().charAt(0));
         return element.getText();
     }
 
@@ -65,11 +63,9 @@ public abstract class ArticleScraper {
         if (!paragraphs.isEmpty()) {
             for (WebElement paragraph : paragraphs) {
                 content.append(paragraph.getText()).append("\n");
-                break;
             }
         } else {
-            String text = contentWrap.getText();
-            content.append(text.length() > 100 ? text.substring(0, 100) + "..." : text).append("\n");
+            content.append(contentWrap.getText()).append("\n");
         }
 
         return content.toString();

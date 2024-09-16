@@ -58,10 +58,8 @@ public class SeleniumService {
                     System.out.println("Title: " + title);
                     System.out.println("Content: " + content);
 
-                    String modelName = "orca-mini";
-
-
-                    String three_line_summary = chatService.basicModel(content);
+                    String three_line_summary = chatService.getSummary(content);
+                    System.out.println("*******요약된 내용입니다.********");
                     System.out.println(three_line_summary);
 
 
@@ -72,11 +70,11 @@ public class SeleniumService {
                                     .category(category)
                                     .rank(rank)
                                     .title(title)
-                                    .content(content)
+                                    .content(three_line_summary)
                                     .link(url)
                                     .build());
 
-                    EmbedBuilder message = createEmbedMessage(rank, title, content, url);
+                    EmbedBuilder message = createEmbedMessage(rank, title, three_line_summary, url);
                     returnMessageArray.add(message);
                     rank++;
 
