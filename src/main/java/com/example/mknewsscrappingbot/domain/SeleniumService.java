@@ -1,6 +1,7 @@
 package com.example.mknewsscrappingbot.domain;
 
 import com.example.mknewsscrappingbot.data.Article;
+import dev.langchain4j.model.chat.ChatLanguageModel;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.openqa.selenium.*;
 import org.springframework.stereotype.Service;
@@ -15,14 +16,17 @@ public class SeleniumService {
     private final WebDriver driver;
     private final ArticleRepository articleRepository;
     private final ArticleScraperFactory articleScraperFactory;
+    private final ChatService chatService;
 
     public SeleniumService(
             SeleniumDriver seleniumDriver,
             ArticleRepository articleRepository,
-            ArticleScraperFactory articleScraperFactory) {
+            ArticleScraperFactory articleScraperFactory,
+            ChatService chatService) {
         this.driver = seleniumDriver.getDriver();
         this.articleRepository = articleRepository;
         this.articleScraperFactory = articleScraperFactory;
+        this.chatService = chatService;
     }
 
     public ArrayList<EmbedBuilder> crawling(String media, String category) {
@@ -53,6 +57,15 @@ public class SeleniumService {
 
                     System.out.println("Title: " + title);
                     System.out.println("Content: " + content);
+
+                    String modelName = "orca-mini";
+
+
+                    String three_line_summary = chatService.basicModel(content);
+                    System.out.println(three_line_summary);
+
+
+
                     articleRepository.save(
                             new Article.ArticleBuilder()
                                     .media(media)
