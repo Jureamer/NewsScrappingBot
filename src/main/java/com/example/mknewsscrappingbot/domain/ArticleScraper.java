@@ -7,6 +7,8 @@ import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public abstract class ArticleScraper {
@@ -74,4 +76,5 @@ public abstract class ArticleScraper {
     public abstract String extractTitle(WebDriver driver);
 
     public abstract String extractContent(WebDriver driver);
+
 }

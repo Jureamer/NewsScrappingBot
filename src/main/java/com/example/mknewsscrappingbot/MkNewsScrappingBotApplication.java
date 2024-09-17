@@ -11,23 +11,8 @@ import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class MkNewsScrappingBotApplication {
-    private final SeleniumService seleniumService;
-    private final DiscordBot discordBot;
-    private final DiscordListener discordListener;
-
-    public MkNewsScrappingBotApplication(SeleniumService seleniumService, DiscordBot discordBot, DiscordListener discordListener) {
-        this.seleniumService = seleniumService;
-        this.discordBot = discordBot;
-        this.discordListener = discordListener;
-    }
-
 
     public static void main(String[] args) {
-        ApplicationContext context = SpringApplication.run(MkNewsScrappingBotApplication.class, args);
-    }
+        ApplicationContext context = SpringApplication.run(MkNewsScrappingBotApplication.class, args);}
 
-    @Bean
-    public JDA jda() {
-        return discordBot.getDiscordBot();
-    }
 }

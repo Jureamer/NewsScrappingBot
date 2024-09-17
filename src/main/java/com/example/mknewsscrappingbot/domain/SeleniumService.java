@@ -29,7 +29,7 @@ public class SeleniumService {
         this.chatService = chatService;
     }
 
-    public ArrayList<EmbedBuilder> crawling(String media, String category) {
+    public ArrayList<EmbedBuilder> getData(String media, String category) {
         ArticleScraper articleScraper = articleScraperFactory.getArticleScraper(media);
         ArrayList<EmbedBuilder> returnMessageArray = new ArrayList<>();
         int rank = 1;
