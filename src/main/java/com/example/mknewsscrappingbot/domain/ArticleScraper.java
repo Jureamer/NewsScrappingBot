@@ -19,12 +19,12 @@ public abstract class ArticleScraper {
     }
 
     protected void waitForPageLoad(WebDriver driver) {
-        Wait<WebDriver> wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        Wait<WebDriver> wait = new WebDriverWait(driver, Duration.ofSeconds(15));
         wait.until(webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState").equals("complete"));
     }
 
     protected void waitForElementToBePresent(WebDriver driver, By by) {
-        Wait<WebDriver> wait = new WebDriverWait(driver, Duration.ofSeconds(15)); // 대기 시간 늘리기
+        Wait<WebDriver> wait = new WebDriverWait(driver, Duration.ofSeconds(15));
         try {
             wait.until(ExpectedConditions.presenceOfElementLocated(by));
         } catch (TimeoutException e) {
