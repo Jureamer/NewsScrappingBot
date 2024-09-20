@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class NewsCrawlingService {
@@ -39,7 +40,7 @@ public class NewsCrawlingService {
         this.chatService = chatService;
     }
 
-    @Scheduled(fixedDelayString = "${crawling.interval}")
+//    @Scheduled(fixedDelayString = "${crawling.interval}")
     public void execute() {
         System.out.println("뉴스 크롤링 작업 시작...");
         for (String media : newsNames) {
@@ -51,23 +52,24 @@ public class NewsCrawlingService {
     private void processMedia(String media) {
         ArticleScraper articleScraper = articleScraperFactory.getArticleScraper(media);
         IKeywordMapping keywordMapping = keywordMappingFactory.getKeywordMapping(media);
-        String[] categories = keywordMapping.getKeywordValues();
+        Map.Entry<String, String>[] entryArray = keywordMapping.getEntryArray();
 
-        System.out.println("Media: " + media + ", Categories: " + Arrays.toString(categories));
-        for (String category : categories) {
-            List<String> urls = articleScraper.getTopUrlsByCategory(driver, category);
-            crawlArticlesByCategory(media, category, urls, articleScraper);
+        for (Map.Entry<String, String> entry : entryArray) {
+            String krCategory = entry.getKey();
+            String enCategory = entry.getValue();
+            List<String> urls = articleScraper.getTopUrlsByCategory(driver, enCategory);
+            crawlArticlesByCategory(media, krCategory, enCategory, urls, articleScraper);
         }
     }
 
-    private void crawlArticlesByCategory(String media, String category, List<String> urls, ArticleScraper articleScraper) {
-        System.out.println("Crawling " + media + " " + category + " articles...");
+    private void crawlArticlesByCategory(String media, String krCategory, String enCategory, List<String> urls, ArticleScraper articleScraper) {
+        System.out.println("Crawling " + media + " " + krCategory + " " + enCategory + " articles...");
 
         int rank = 1;
         for (String url : urls) {
             if (rank > 10) break;  // Stop after top 10 articles
             try {
-                processArticle(media, category, rank, url, articleScraper);
+                processArticle(media, krCategory, rank, url, articleScraper);
                 rank++;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -75,7 +77,7 @@ public class NewsCrawlingService {
         }
     }
 
-    private void processArticle(String media, String category, int rank, String url, ArticleScraper articleScraper) {
+    private void processArticle(String media, String krCategory, int rank, String url, ArticleScraper articleScraper) {
         driver.get(url);
         articleScraper.waitForPageLoad(driver);
 
@@ -88,7 +90,7 @@ public class NewsCrawlingService {
         System.out.println("******* 요약된 내용입니다. ********");
         System.out.println(threeLineSummary);
 
-        saveArticle(media, category, rank, title, threeLineSummary, url);
+        saveArticle(media, krCategory, rank, title, threeLineSummary, url);
     }
 
     private void saveArticle(String media, String category, int rank, String title, String content, String url) {

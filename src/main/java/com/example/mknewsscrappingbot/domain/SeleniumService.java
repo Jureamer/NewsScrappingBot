@@ -30,62 +30,17 @@ public class SeleniumService {
     }
 
     public ArrayList<EmbedBuilder> getData(String media, String category) {
-        ArticleScraper articleScraper = articleScraperFactory.getArticleScraper(media);
         ArrayList<EmbedBuilder> returnMessageArray = new ArrayList<>();
         int rank = 1;
 
-        List<Article> existingArticles = articleRepository.findByCategoryOrderByRank(category);
+//        List<Article> existingArticles = articleRepository.findByCategoryOrderByRank(category);
+        List<Article> existingArticles = articleRepository.findByMediaAndCategoryOrderByRank(media, category);
 
+        System.out.println("existingArticles.size() = " + existingArticles.size());
         for (Article article : existingArticles) {
             EmbedBuilder message = createEmbedMessage(rank, article.getTitle(), article.getContent(), article.getUrl());
             returnMessageArray.add(message);
             rank++;
-        }
-
-        if (rank <= 10) {
-            List<String> urls = articleScraper.getTopUrlsByCategory(driver, category);
-
-            System.out.println("Crawling " + media + " " + category + " articles....");
-
-            for (String url : urls) {
-                try {
-                    driver.get(url);
-                    articleScraper.waitForPageLoad(driver);
-
-                    String title = articleScraper.extractTitle(driver);
-                    String content = articleScraper.extractContent(driver);
-
-                    System.out.println("Title: " + title);
-                    System.out.println("Content: " + content);
-
-                    String three_line_summary = chatService.getSummary(content);
-                    System.out.println("*******요약된 내용입니다.********");
-                    System.out.println(three_line_summary);
-
-
-
-                    articleRepository.save(
-                            new Article.ArticleBuilder()
-                                    .media(media)
-                                    .category(category)
-                                    .rank(rank)
-                                    .title(title)
-                                    .content(three_line_summary)
-                                    .link(url)
-                                    .build());
-
-                    EmbedBuilder message = createEmbedMessage(rank, title, three_line_summary, url);
-                    returnMessageArray.add(message);
-                    rank++;
-
-                    if (rank > 10) {
-                        break;
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
         }
         return returnMessageArray;
     }

@@ -33,4 +33,10 @@ public class AbstractKeywordMapping implements IKeywordMapping {
     public String[] getKeywordValues() {
         return keywordsMap.values().toArray(new String[0]);
     }
+
+    @Override
+    public Map.Entry<String, String>[] getEntryArray() {
+        Map.Entry<String, String>[] entryArray = keywordsMap.entrySet().toArray(new Map.Entry[0]);
+        return entryArray;
+    };
 }
