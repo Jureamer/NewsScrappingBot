@@ -16,66 +16,71 @@ public class NewsCrawlingService {
     private final ArticleScraperFactory articleScraperFactory;
     private final NewsSourceFactory newsSourceFactory;
     private final KeywordMappingFactory keywordMappingFactory;
-    private WebDriver webDriver;
+    private final WebDriver driver;
+    private final ArticleRepository articleRepository;
+    private final ChatService chatService;
 
     public NewsCrawlingService(
             ArticleScraperFactory articleScraperFactory,
             NewsSourceFactory newsSourceFactory,
             KeywordMappingFactory keywordMappingFactory,
-            SeleniumDriver seleniumDriver
+            SeleniumDriver seleniumDriver,
+            ArticleRepository articleRepository,
+            ChatService chatService
     ) {
         this.articleScraperFactory = articleScraperFactory;
         this.newsSourceFactory = newsSourceFactory;
         this.keywordMappingFactory = keywordMappingFactory;
-        this.webDriver = seleniumDriver.getWebDriver();
+        this.driver = seleniumDriver.getDriver();
+        this.articleRepository = articleRepository;
+        this.chatService = chatService;
     }
 
     public void execute() {
-        for (String newsName : newsNames) {
-        ArticleScraper articleScraper = articleScraperFactory.getArticleScraper(newsName);
-        IKeywordMapping keywordMapping = keywordMappingFactory.getKeywordMapping(newsName);
+        for (String media : newsNames) {
+            ArticleScraper articleScraper = articleScraperFactory.getArticleScraper(media);
+            IKeywordMapping keywordMapping = keywordMappingFactory.getKeywordMapping(media);
+            String[] categories = keywordMapping.getKeywordValues();
+
+            for (String category : categories) {
+                List<String> urls = articleScraper.getTopUrlsByCategory(driver, category);
+
+                System.out.println("Crawling " + media + " " + category + " articles....");
 
 
-        List<String> categories = keywordMappingFactory.getKeywordMapping(newsName).getKeywords();
-        List<String> urls = articleScraper.getTopUrlsByCategory(driver, category);
+                int rank = 1;
+                for (String url : urls) {
+                    try {
+                        driver.get(url);
+                        articleScraper.waitForPageLoad(driver);
 
-            System.out.println("Crawling " + media + " " + category + " articles....");
+                        String title = articleScraper.extractTitle(driver);
+                        String content = articleScraper.extractContent(driver);
 
-            for (String url : urls) {
-                try {
-                    driver.get(url);
-                    articleScraper.waitForPageLoad(driver);
+                        System.out.println("Title: " + title);
+                        System.out.println("Content: " + content);
 
-                    String title = articleScraper.extractTitle(driver);
-                    String content = articleScraper.extractContent(driver);
-
-                    System.out.println("Title: " + title);
-                    System.out.println("Content: " + content);
-
-                    String three_line_summary = chatService.getSummary(content);
-                    System.out.println("*******요약된 내용입니다.********");
-                    System.out.println(three_line_summary);
+                        String three_line_summary = chatService.getSummary(content);
+                        System.out.println("*******요약된 내용입니다.********");
+                        System.out.println(three_line_summary);
 
 
+                        articleRepository.save(
+                                new Article.ArticleBuilder()
+                                        .media(media)
+                                        .category(category)
+                                        .rank(rank)
+                                        .title(title)
+                                        .content(three_line_summary)
+                                        .link(url)
+                                        .build());
 
-                    articleRepository.save(
-                            new Article.ArticleBuilder()
-                                    .media(media)
-                                    .category(category)
-                                    .rank(rank)
-                                    .title(title)
-                                    .content(three_line_summary)
-                                    .link(url)
-                                    .build());
-
-                    EmbedBuilder message = createEmbedMessage(rank, title, three_line_summary, url);
-                    returnMessageArray.add(message);
-                    rank++;
-
-                    if (rank > 10) {
-                        break;
+                        rank++;
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
+                }
+            }
+        }
     }
-
-
 }
