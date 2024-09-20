@@ -2,12 +2,12 @@ package com.example.mknewsscrappingbot.data.keywordMapping;
 
 import java.util.HashMap;
 
-public class JaKeywordMapping implements IKeywordMapping {
+public class JaKeywordMapping extends AbstractKeywordMapping {
     private static final String EN_NAME = "Jooang Ilbo";
     private static final String KR_NAME = "중앙일보";
     private static final HashMap<String, String> keywordsMap = new HashMap<String, String>();
 
-    static {
+    public JaKeywordMapping() {
         keywordsMap.put("경제", "money");
         keywordsMap.put("사회", "society");
         keywordsMap.put("국제", "world");
@@ -16,23 +16,5 @@ public class JaKeywordMapping implements IKeywordMapping {
         keywordsMap.put("스포츠", "sports");
         keywordsMap.put("라이프", "lifestyle");
         keywordsMap.put("피플", "people");
-    }
-
-    public String getKeywordForCategory(String category) {
-        return keywordsMap.getOrDefault(category, ""); // 기본값 설정 가능
-    }
-
-    public String toKeyString() {
-        return keywordsMap.keySet().toString();
-    }
-
-    @Override
-    public String getKrName() {
-        return KR_NAME;
-    }
-
-    @Override
-    public String getEnName() {
-        return EN_NAME;
     }
 }
