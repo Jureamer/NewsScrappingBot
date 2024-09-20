@@ -1,5 +1,8 @@
 package com.example.mknewsscrappingbot.data.newsSource;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class NewsSourceFactory {
     public NewsSource getNewsSource(String newsName) {
         switch (newsName) {

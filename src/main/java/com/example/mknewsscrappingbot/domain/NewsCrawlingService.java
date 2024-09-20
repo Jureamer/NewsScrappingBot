@@ -6,11 +6,14 @@ import com.example.mknewsscrappingbot.data.keywordMapping.KeywordMappingFactory;
 import com.example.mknewsscrappingbot.data.newsSource.NewsSourceFactory;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.openqa.selenium.WebDriver;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@Service
 public class NewsCrawlingService {
     private final ArrayList<String> newsNames = new ArrayList<>(Arrays.asList("HK", "MK", "CS", "JA", "DA"));
     private final ArticleScraperFactory articleScraperFactory;
@@ -36,10 +39,13 @@ public class NewsCrawlingService {
         this.chatService = chatService;
     }
 
+    @Scheduled(fixedDelayString = "${crawling.interval}")
     public void execute() {
+        System.out.println("뉴스 크롤링 작업 시작...");
         for (String media : newsNames) {
             processMedia(media);
         }
+        System.out.println("뉴스 크롤링 작업 종료...");
     }
 
     private void processMedia(String media) {
@@ -47,6 +53,7 @@ public class NewsCrawlingService {
         IKeywordMapping keywordMapping = keywordMappingFactory.getKeywordMapping(media);
         String[] categories = keywordMapping.getKeywordValues();
 
+        System.out.println("Media: " + media + ", Categories: " + Arrays.toString(categories));
         for (String category : categories) {
             List<String> urls = articleScraper.getTopUrlsByCategory(driver, category);
             crawlArticlesByCategory(media, category, urls, articleScraper);

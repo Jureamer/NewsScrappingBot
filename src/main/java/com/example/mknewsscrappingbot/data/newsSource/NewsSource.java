@@ -1,5 +1,8 @@
 package com.example.mknewsscrappingbot.data.newsSource;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public abstract class NewsSource {
     private final String requestUrl;
     private final String newsWrapCssSelector;

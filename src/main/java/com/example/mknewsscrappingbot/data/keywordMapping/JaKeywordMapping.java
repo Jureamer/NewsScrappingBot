@@ -1,13 +1,16 @@
 package com.example.mknewsscrappingbot.data.keywordMapping;
 
+import org.springframework.stereotype.Component;
+
 import java.util.HashMap;
 
+@Component
 public class JaKeywordMapping extends AbstractKeywordMapping {
     private static final String EN_NAME = "Jooang Ilbo";
     private static final String KR_NAME = "중앙일보";
-    private static final HashMap<String, String> keywordsMap = new HashMap<String, String>();
 
     public JaKeywordMapping() {
+        super();
         keywordsMap.put("경제", "money");
         keywordsMap.put("사회", "society");
         keywordsMap.put("국제", "world");

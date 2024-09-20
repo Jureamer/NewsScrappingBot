@@ -1,8 +1,11 @@
 package com.example.mknewsscrappingbot.data.keywordMapping;
 
+import org.springframework.stereotype.Component;
+
 import java.util.HashMap;
 import java.util.Map;
 
+@Component
 public class AbstractKeywordMapping implements IKeywordMapping {
     protected final String KR_NAME = "";
     protected final String EN_NAME = "";

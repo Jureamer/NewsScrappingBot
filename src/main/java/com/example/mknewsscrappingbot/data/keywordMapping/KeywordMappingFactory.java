@@ -1,7 +1,9 @@
 package com.example.mknewsscrappingbot.data.keywordMapping;
 
 import com.example.mknewsscrappingbot.data.newsSource.*;
+import org.springframework.stereotype.Component;
 
+@Component
 public class KeywordMappingFactory {
     public IKeywordMapping getKeywordMapping(String newsName) {
         switch (newsName) {
