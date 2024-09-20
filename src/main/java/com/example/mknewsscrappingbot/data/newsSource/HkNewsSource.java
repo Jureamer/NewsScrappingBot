@@ -12,9 +12,4 @@ public class HkNewsSource extends NewsSource {
                 ".article-body"
         );
     }
-
-    @Override
-    public String getCustomRequestUrl(String category) {
-        return this.getRequestUrl() + category;
-    }
 }

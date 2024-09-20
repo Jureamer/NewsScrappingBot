@@ -12,9 +12,4 @@ public class JaNewsSource extends NewsSource {
 "#article_body.article_body.fs3"
         );
     }
-
-    @Override
-    public String getCustomRequestUrl(String category) {
-        return this.getRequestUrl() + category;
-    }
 }
