@@ -1,8 +1,8 @@
 package com.example.mknewsscrappingbot.data.newsSource;
 
 public class NewsSourceFactory {
-    public NewsSource getNewsSource(String newsSource) {
-        switch (newsSource) {
+    public NewsSource getNewsSource(String newsName) {
+        switch (newsName) {
             case "HK":
                 return new HkNewsSource();
             case "MK":
@@ -14,7 +14,7 @@ public class NewsSourceFactory {
             case "DA":
                 return new DaNewsSource();
             default:
-                throw new IllegalArgumentException("Invalid news source: " + newsSource);
+                throw new IllegalArgumentException("Invalid news source: " + newsName);
         }
     }
 }
