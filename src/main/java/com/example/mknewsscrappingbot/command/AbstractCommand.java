@@ -1,8 +1,8 @@
 package com.example.mknewsscrappingbot.command;
 
-import com.example.mknewsscrappingbot.constant.MessageConstants;
-import com.example.mknewsscrappingbot.data.keywordMapping.IKeywordMapping;
-import com.example.mknewsscrappingbot.domain.SeleniumService;
+import com.example.mknewsscrappingbot.common.constant.MessageConstants;
+import com.example.mknewsscrappingbot.common.IKeywordMapping;
+import com.example.mknewsscrappingbot.service.selenium.SeleniumService;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
