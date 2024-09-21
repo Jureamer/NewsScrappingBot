@@ -40,12 +40,13 @@ public class NewsCrawlingService {
         this.chatService = chatService;
     }
 
-//    @Scheduled(fixedDelayString = "${crawling.interval}")
+    @Scheduled(fixedDelayString = "${crawling.interval}")
     public void execute() {
         System.out.println("뉴스 크롤링 작업 시작...");
-        for (String media : newsNames) {
-            processMedia(media);
-        }
+//        for (String media : newsNames) {
+//            processMedia(media);
+//        }
+        processMedia("CS");
         System.out.println("뉴스 크롤링 작업 종료...");
     }
 

@@ -4,9 +4,11 @@ import com.example.mknewsscrappingbot.data.Article;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.openqa.selenium.*;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.awt.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +19,9 @@ public class SeleniumService {
     private final ArticleRepository articleRepository;
     private final ArticleScraperFactory articleScraperFactory;
     private final ChatService chatService;
+    @Value("${crawling.interval}")
+    private int hours;
+
 
     public SeleniumService(
             SeleniumDriver seleniumDriver,
@@ -33,10 +38,9 @@ public class SeleniumService {
         ArrayList<EmbedBuilder> returnMessageArray = new ArrayList<>();
         int rank = 1;
 
-//        List<Article> existingArticles = articleRepository.findByCategoryOrderByRank(category);
-        List<Article> existingArticles = articleRepository.findByMediaAndCategoryOrderByRank(media, category);
+        LocalDateTime timeThreshold = LocalDateTime.now().minusHours(hours);
+        List<Article> existingArticles = articleRepository.findByMediaAndCategoryAndCreatedAtAfterOrderByRank(media, category, timeThreshold);
 
-        System.out.println("existingArticles.size() = " + existingArticles.size());
         for (Article article : existingArticles) {
             EmbedBuilder message = createEmbedMessage(rank, article.getTitle(), article.getContent(), article.getUrl());
             returnMessageArray.add(message);
