@@ -33,8 +33,8 @@ public abstract class ArticleScraper {
         }
     }
 
-    protected List<String> getTopUrlsByCategory(WebDriver driver, String category) {
-        driver.get(newsSource.getCustomRequestUrl(category));
+    protected List<String> getTopUrlsByCategory(WebDriver driver, String krCategory, String enCategory) {
+        driver.get(newsSource.getCustomRequestUrl(enCategory));
         waitForPageLoad(driver);
         waitForElementToBePresent(driver, By.cssSelector(newsSource.getNewsWrapCssSelector()));
 

@@ -40,13 +40,13 @@ public class NewsCrawlingService {
         this.chatService = chatService;
     }
 
-    @Scheduled(fixedDelayString = "${crawling.interval}")
+//    @Scheduled(fixedDelayString = "${crawling.interval}")
     public void execute() {
         System.out.println("뉴스 크롤링 작업 시작...");
-//        for (String media : newsNames) {
-//            processMedia(media);
-//        }
-        processMedia("CS");
+        for (String media : newsNames) {
+            processMedia(media);
+        }
+//        processMedia("CS");
         System.out.println("뉴스 크롤링 작업 종료...");
     }
 
@@ -58,7 +58,7 @@ public class NewsCrawlingService {
         for (Map.Entry<String, String> entry : entryArray) {
             String krCategory = entry.getKey();
             String enCategory = entry.getValue();
-            List<String> urls = articleScraper.getTopUrlsByCategory(driver, enCategory);
+            List<String> urls = articleScraper.getTopUrlsByCategory(driver, krCategory, enCategory);
             crawlArticlesByCategory(media, krCategory, enCategory, urls, articleScraper);
         }
     }

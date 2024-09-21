@@ -7,8 +7,8 @@ import java.util.Map;
 
 @Component
 public class AbstractKeywordMapping implements IKeywordMapping {
-    protected final String KR_NAME = "";
-    protected final String EN_NAME = "";
+    protected String KR_NAME;
+    protected String EN_NAME;
     protected final Map<String, String> keywordsMap = new HashMap<>();
 
     @Override

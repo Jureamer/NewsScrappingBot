@@ -17,7 +17,8 @@ public class CsKeywordMapping extends AbstractKeywordMapping {
         keywordsMap.put("건강", "medical");
 //        keywordsMap.put("재테크", "investment"); // 재테크의 경우 Top News 미존재
         keywordsMap.put("스포츠", "sports");
-        keywordsMap.put("문화연예", "culture-style");
+        keywordsMap.put("문화", "culture-style");
+        keywordsMap.put("연예", "culture-style");
         keywordsMap.put("쇼핑", "shopping");
     }
 }
