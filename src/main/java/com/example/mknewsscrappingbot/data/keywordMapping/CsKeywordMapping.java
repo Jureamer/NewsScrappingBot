@@ -15,10 +15,10 @@ public class CsKeywordMapping extends AbstractKeywordMapping {
         keywordsMap.put("사회", "national");
         keywordsMap.put("국제", "international");
         keywordsMap.put("건강", "medical");
-//        keywordsMap.put("재테크", "investment"); // 재테크의 경우 Top News 미존재
+//        keywordsMap.put("재테크", "investment"); // 재테크 Top News 미존재
         keywordsMap.put("스포츠", "sports");
         keywordsMap.put("문화", "culture-style");
         keywordsMap.put("연예", "culture-style");
-        keywordsMap.put("쇼핑", "shopping");
+//        keywordsMap.put("쇼핑", "shopping"); // 쇼핑 Top News 미존재
     }
 }
