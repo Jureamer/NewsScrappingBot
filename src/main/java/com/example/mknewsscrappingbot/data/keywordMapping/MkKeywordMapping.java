@@ -6,11 +6,11 @@ import java.util.HashMap;
 
 @Component
 public class MkKeywordMapping extends AbstractKeywordMapping {
-    private static final String EN_NAME = "Maeil Business Newspaper";
-    private static final String KR_NAME = "매일경제신문";
 
     public MkKeywordMapping() {
         super();
+        this.KR_NAME = "매일경제신문";
+        this.EN_NAME = "Maeil Business Newspaper";
         keywordsMap.put("경제", "economy");
         keywordsMap.put("비즈니스", "Business");
         keywordsMap.put("사회", "society");

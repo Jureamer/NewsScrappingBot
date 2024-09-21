@@ -6,11 +6,11 @@ import java.util.HashMap;
 
 @Component
 public class CsKeywordMapping extends AbstractKeywordMapping {
-    private static final String EN_NAME = "The Chosun Ilbo";
-    private static final String KR_NAME = "조선일보";
 
     public CsKeywordMapping() {
         super();
+        this.KR_NAME = "조선일보";
+        this.EN_NAME = "The Chosun Ilbo";
         keywordsMap.put("정치", "politics");
         keywordsMap.put("사회", "national");
         keywordsMap.put("국제", "international");

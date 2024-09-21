@@ -6,11 +6,10 @@ import java.util.HashMap;
 
 @Component
 public class HkKeywordMapping extends AbstractKeywordMapping {
-    private static final String EN_NAME = "The Korea Economic Daily";
-    private static final String KR_NAME = "한국경제신문";
-
     public HkKeywordMapping() {
         super();
+        this.KR_NAME = "한국경제신문";
+        this.EN_NAME = "The Korea Economic Daily";
         keywordsMap.put("오피니언", "all-news-opinion");
         keywordsMap.put("경제", "all-news-economy");
         keywordsMap.put("정치", "all-news-politics");

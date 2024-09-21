@@ -42,7 +42,7 @@ public abstract class AbstractCommand implements Command {
         }
 
         textChannel.sendMessage((MessageConstants.getNewsFetchingMessage(keywordMapping.getKrName(), category))).queue();
-        ArrayList<EmbedBuilder> newsSummery = seleniumService.getData(media, categoryEn);
+        ArrayList<EmbedBuilder> newsSummery = seleniumService.getData(media, category);
 
         textChannel.sendMessage(MessageConstants.NEWS_PRINT_INFO)
                 .addEmbeds(newsSummery.stream()

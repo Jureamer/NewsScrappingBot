@@ -19,7 +19,7 @@ public class SeleniumService {
     private final ArticleRepository articleRepository;
     private final ArticleScraperFactory articleScraperFactory;
     private final ChatService chatService;
-    @Value("${crawling.interval}")
+    @Value("${crawling.retention-hours}")
     private int hours;
 
 
@@ -41,6 +41,7 @@ public class SeleniumService {
         LocalDateTime timeThreshold = LocalDateTime.now().minusHours(hours);
         List<Article> existingArticles = articleRepository.findByMediaAndCategoryAndCreatedAtAfterOrderByRank(media, category, timeThreshold);
 
+        System.out.println("media : " + media + ", category : " + category + ", timeThreshold : " + timeThreshold);
         for (Article article : existingArticles) {
             EmbedBuilder message = createEmbedMessage(rank, article.getTitle(), article.getContent(), article.getUrl());
             returnMessageArray.add(message);
