@@ -10,6 +10,7 @@ import com.example.mknewsscrappingbot.news.source.NewsSourceFactory;
 import com.example.mknewsscrappingbot.news.scraper.ArticleScraper;
 import com.example.mknewsscrappingbot.service.selenium.SeleniumDriver;
 import org.openqa.selenium.WebDriver;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -43,13 +44,13 @@ public class NewsCrawlingService {
         this.chatService = chatService;
     }
 
-//    @Scheduled(fixedDelayString = "${crawling.interval}")
+    @Scheduled(fixedDelayString = "${crawling.interval}")
     public void execute() {
         System.out.println("뉴스 크롤링 작업 시작...");
         for (String media : newsNames) {
             processMedia(media);
         }
-//        processMedia("CS");
+//        processMedia("HK");
         System.out.println("뉴스 크롤링 작업 종료...");
     }
 
